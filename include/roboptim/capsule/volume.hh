@@ -1,4 +1,4 @@
-// Copyright (C) 2011 by Antonio El Khoury.
+// Copyright (C) 2012 by Antonio El Khoury.
 //
 // This file is part of the roboptim-capsule.
 //
@@ -17,7 +17,8 @@
 // <http://www.gnu.org/licenses/>.
 
 /**
- * \brief Declaration of Volume function.
+ * \brief Declaration of Volume class that computes the volume and
+ * gradient of a capsule.
  */
 
 #ifndef ROBOPTIM_CAPSULE_VOLUME_HH
