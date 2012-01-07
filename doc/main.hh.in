@@ -1,0 +1,38 @@
+/**
+\mainpage
+
+\section sec_intro_hppDevice Introduction
+
+This package contains classes representing robots, humanoid robots, joints and bodies with
+\li dynamic properties (mass, inertia, velocity, acceleration,...) that are implemented through <a href="@ABSTRACT_ROBOT_DYNAMICS_DOXYGENDOCDIR@/main.html">robot dynamics</a> abstract interfaces,
+\li geometric properties (kinematic chain, distance to obstacles) that are implemented by <a href="@KINEOCONTROLLER_PREFIX@/share/doc/KPP SDK/html/main.html">KineoPathPlanner</a>.
+
+\section sec_hppDevice_organization_classes Organization of the classes
+
+\subsection subsec_hppDevice_robots Robots
+
+The following figure displays the inheritance diagram between classes of KineoWorks and robot dynamics packages and implementation classes of robot dynamics classes. classes hpp::model::impl::DynamicRobot and hpp::model::impl::HumanoidDynamicRobot are implementations of respectively CjrlDynamicRobot and CjrlHumanoidDynamicRobot.
+\image html classDiagramRobot.png "Inheritance diagram between classes implementing robots. Lines represent inheritance, thin lines reprensent virtual inheritance."
+
+\subsubsection subsubsec_humanoid_optimized Optimized implementation of humanoid robot.
+
+It is possible to instantiate an optimized implementation of a humanoid robot through a template mechanism explained in documentation of class hpp::model::SpecificHumanoidRobot.
+
+\subsection subsec_hppDevice_joints Joints
+
+The following figure displays the inheritance diagram between classes representing robot joints.
+
+\image html classDiagramJoint.png "Inheritance diagram between classes implementing joints. Red line represents pointer to object."
+
+\subsection subsec_hppDevice_bodies Bodies
+
+The following figure displays the inheritance diagram between classes implementing robot bodies.
+\li hpp::model::impl::Body is an implementation of CjrlBody.
+\li hpp::model::Body is an sub-class of CkwsKCDBody.
+
+Unfortunately, there is not a unique class implementing both.
+
+\image html classDiagramBody.png "Inheritance diagram between classes implementing bodies."
+
+
+*/
