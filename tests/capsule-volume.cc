@@ -20,17 +20,16 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
-using boost::test_tools::output_test_stream;
-
 #include <roboptim/core/io.hh>
 #include <roboptim/core/finite-difference-gradient.hh>
 
 #include "roboptim/capsule/volume.hh"
 
+using boost::test_tools::output_test_stream;
+
 BOOST_AUTO_TEST_CASE (capsule_volume)
 {
   using namespace roboptim::capsule;
-  using namespace boost::numeric::ublas;
 
   // Create volume function.
   Volume volumeFunction ("capsule volume");
