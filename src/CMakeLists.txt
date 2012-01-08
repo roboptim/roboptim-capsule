@@ -4,6 +4,7 @@ ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
   volume.cc
   distance-capsule-polyhedron.cc
+  distance-segment-polyhedron.cc
   )
 
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION})
