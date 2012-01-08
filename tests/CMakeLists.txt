@@ -32,3 +32,6 @@ ENDMACRO(ADD_TESTCASE)
 # Generated test.
 ADD_TESTCASE(capsule-volume)
 KINEO_STANDALONE(capsule-volume)
+
+ADD_TESTCASE(distance-capsule-polyhedron)
+KINEO_STANDALONE(distance-capsule-polyhedron)
