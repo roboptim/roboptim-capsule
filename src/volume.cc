@@ -57,12 +57,12 @@ namespace roboptim
       result.clear ();
 
       // Compute capsule volume.
-      double length = sqrt ((argument[0] - argument[3])
-			    * (argument[0] - argument[3])
-			    + (argument[1] - argument[4])
-			    * (argument[1] - argument[4])
-			    + (argument[2] - argument[5])
-			    * (argument[2] - argument[5]));
+      value_type length = sqrt ((argument[0] - argument[3])
+				* (argument[0] - argument[3])
+				+ (argument[1] - argument[4])
+				* (argument[1] - argument[4])
+				+ (argument[2] - argument[5])
+				* (argument[2] - argument[5]));
 
       result[0] = length * M_PI * argument[6] * argument[6]
 	+ 4. / 3. * M_PI * argument[6] * argument[6] * argument[6];
@@ -80,12 +80,12 @@ namespace roboptim
 
       gradient.clear ();
 
-      double length = sqrt ((argument[0] - argument[3])
-			    * (argument[0] - argument[3])
-			    + (argument[1] - argument[4])
-			    * (argument[1] - argument[4])
-			    + (argument[2] - argument[5])
-			    * (argument[2] - argument[5]));
+      value_type length = sqrt ((argument[0] - argument[3])
+				* (argument[0] - argument[3])
+				+ (argument[1] - argument[4])
+				* (argument[1] - argument[4])
+				+ (argument[2] - argument[5])
+				* (argument[2] - argument[5]));
 
       gradient[0] = 1 / length * (argument[0] - argument[3])
       	* M_PI * argument[6] * argument[6];

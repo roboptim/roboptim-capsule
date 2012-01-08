@@ -30,7 +30,10 @@ namespace roboptim
 {
   namespace capsule
   {
-    typedef roboptim::DifferentiableFunction::argument_t argument_t;
+    /// \brief Import types from roboptim Function.
+    typedef roboptim::Function::value_type value_type;
+    typedef roboptim::Function::size_type size_type;
+    typedef roboptim::Function::argument_t argument_t;
     
     /// \brief Capsule volume function.
     ///
