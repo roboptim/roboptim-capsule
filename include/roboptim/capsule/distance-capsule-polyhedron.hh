@@ -18,8 +18,7 @@
 
 /**
  * \brief Declaration of DistanceCapsulePolyhedron class that computes
- * the distance between a capsule and a polyhedron and its associated
- * gradient.
+ * the distance between a capsule and a polyhedron.
  */
 
 #ifndef ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POLYHEDRON_HH
