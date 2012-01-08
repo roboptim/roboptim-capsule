@@ -17,7 +17,7 @@
 // <http://www.gnu.org/licenses/>.
 
 /**
- * \file src/interbody-distance-function.cc
+ * \file src/volume.cc
  *
  * \brief Implementation of Volume.
  */
