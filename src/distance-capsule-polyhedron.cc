@@ -101,11 +101,14 @@ namespace roboptim
 
       // Compute distance.
       analysis_->compute ();
-      assert (analysis_->countExactDistanceReports () == 1
-	      && "No exact distance report found in analysis.");
 
-      result[0] = analysis_->exactDistanceReport (0)->distance ()
-	- argument[6];
+      if (analysis_->countExactDistanceReports () == 1)
+	result[0] = analysis_->exactDistanceReport (0)->distance ()
+	  - argument[6];
+      else
+	result[0] = 0.;
+
+      std::cout << result[0] << std::endl;
 
       return;
     }

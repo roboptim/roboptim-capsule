@@ -81,7 +81,7 @@ namespace roboptim
       ///  segment) is used. Returned distance will be positive if the
       ///  capsule and the polyhedron do not collide, and will
       ///  negative and equal to the penetration distance in case of
-      ///  collision. Note that the analysis will fail if the segment
+      ///  collision. Returned distance will be null if the segment
       ///  itself collides with the polyhedron.
       ///
       /// \param argument vector containing the capsule parameters. It

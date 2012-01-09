@@ -78,7 +78,7 @@ namespace roboptim
       /// polyhedron.
       ///
       ///  An analysis between the polyhedron and the segment is
-      ///  used. Note that the analysis will fail if the segment
+      ///  used. Returned distance will be null if the segment
       ///  collides with the polyhedron.
       ///
       /// \param argument vector containing the capsule parameters. It
