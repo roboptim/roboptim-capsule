@@ -5,6 +5,7 @@ ADD_LIBRARY(${LIBRARY_NAME}
   volume.cc
   distance-capsule-polyhedron.cc
   distance-segment-polyhedron.cc
+  fitter.cc
   )
 
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION})

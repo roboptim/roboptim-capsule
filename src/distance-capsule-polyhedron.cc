@@ -108,8 +108,6 @@ namespace roboptim
       else
 	result[0] = 0.;
 
-      std::cout << result[0] << std::endl;
-
       return;
     }
 

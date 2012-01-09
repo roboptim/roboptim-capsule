@@ -19,6 +19,7 @@ SET(${PROJECT_NAME}_HEADERS
   include/roboptim/capsule/volume.hh
   include/roboptim/capsule/distance-capsule-polyhedron.hh
   include/roboptim/capsule/distance-segment-polyhedron.hh
+  include/roboptim/capsule/fitter.hh
   )
 
 SETUP_PROJECT()

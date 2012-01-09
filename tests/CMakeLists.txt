@@ -38,3 +38,6 @@ KINEO_STANDALONE(distance-capsule-polyhedron)
 
 ADD_TESTCASE(distance-segment-polyhedron)
 KINEO_STANDALONE(distance-segment-polyhedron)
+
+ADD_TESTCASE(fitter)
+KINEO_STANDALONE(fitter)
