@@ -21,8 +21,8 @@
  * the distance between a segment and a polyhedron.
  */
 
-#ifndef ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_HH
-# define ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_HH
+#ifndef ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_HH
+# define ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_HH
 
 # include <kcd2/kcdInterface.h>
 
@@ -105,4 +105,4 @@ namespace roboptim
   } // end of namespace capsule.
 } // end of namespace roboptim.
 
-#endif //! ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_HH
+#endif //! ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_HH

@@ -22,8 +22,8 @@
  * \brief Implementation of DistanceSegmentPolyhedron.
  */
 
-#ifndef ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_CC_
-# define ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_CC_
+#ifndef ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_CC_
+# define ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_CC_
 
 # include <math.h>
 
@@ -113,4 +113,4 @@ namespace roboptim
   } // end of namespace capsule.
 } // end of namespace roboptim.
 
-#endif //! ROBOPTIM_SEGMENT_DISTANCE_SEGMENT_POLYHEDRON_CC_
+#endif //! ROBOPTIM_CAPSULE_DISTANCE_SEGMENT_POLYHEDRON_CC_
