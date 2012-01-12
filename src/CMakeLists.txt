@@ -5,6 +5,7 @@ ADD_LIBRARY(${LIBRARY_NAME}
   volume.cc
   distance-capsule-polyhedron.cc
   distance-segment-polyhedron.cc
+  distance-capsule-point.cc
   fitter.cc
   )
 
