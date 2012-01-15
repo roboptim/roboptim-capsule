@@ -117,8 +117,8 @@ namespace roboptim
       CkcdPoint segmentClosestFromEndP1 = segmentClosest - endPoint1;
       CkcdPoint endP2FromEndP1 = endPoint2 - endPoint1;
       value_type lambda;
-      if (endP2FromEndP1[0] != 0)
-	lambda = segmentClosestFromEndP1[0] / endP2FromEndP1[0];
+      if (endP2FromEndP1.norm () > 0)
+	lambda = segmentClosestFromEndP1.norm () / endP2FromEndP1.norm ();
       else
 	lambda = 0.;
 
