@@ -24,12 +24,13 @@
 #ifndef ROBOPTIM_CAPSULE_FITTER_HH
 # define ROBOPTIM_CAPSULE_FITTER_HH
 
+# include <kcd2/kcdInterface.h>
+
 # include <roboptim/core/solver-factory.hh>
 
 # include "roboptim/capsule/types.hh"
 # include "roboptim/capsule/volume.hh"
-# include "roboptim/capsule/distance-segment-polyhedron.hh"
-# include "roboptim/capsule/distance-capsule-polyhedron.hh"
+# include "roboptim/capsule/distance-capsule-point.hh"
 
 namespace roboptim
 {

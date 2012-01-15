@@ -26,9 +26,9 @@
 # define ROBOPTIM_CAPSULE_FITTER_CC_
 
 # include <math.h>
+# include <sstream>
 
 # include <roboptim/core/finite-difference-gradient.hh>
-# include <roboptim/core/numeric-linear-function.hh>
 
 # include "roboptim/capsule/fitter.hh"
 
@@ -128,40 +128,36 @@ namespace roboptim
       // The radius must not be negative.
       problem.argumentBounds ()[6] = Function::makeLowerInterval (0.);
 
-      // Define the two distance functions. They are the constraints
-      // of the optimization problem.
-      DistanceSegmentPolyhedron distanceSegment (polyhedron);
-      DistanceCapsulePolyhedron distanceCapsule (polyhedron);
+      // Cycle through polyhedron points and define distance
+      // functions. They are the constraints of the optimization
+      // problem.
+      CkcdMat4 transform;
+      polyhedron->getAbsolutePosition (transform);
 
-      // Define two distance functions that implement gradient
-      // computation with finite difference.
-      boost::shared_ptr<FiniteDifferenceGradient<> >
-	fdgDistanceSegment (new FiniteDifferenceGradient<> (distanceSegment));
-      boost::shared_ptr<FiniteDifferenceGradient<> >
-	fdgDistanceCapsule (new FiniteDifferenceGradient<> (distanceCapsule));
+      for (unsigned i = 0; i < polyhedron->countPoints (); ++i)
+	{
+	  CkcdPoint point;
+	  polyhedron->getPoint (i, point);
+	  point = transform * point;
+	
+	  std::string s = "distance to point ";
+	  std::stringstream name;
+	  name << s << i;
 
-      // Add segment distance constraint. The distance between the
-      // capsule segment and the polyhedron must be always positive
-      // (the segment is inside the polyhedron).
-      Function::interval_t distanceSegmentInterval
-	= Function::makeLowerInterval (0.);
-
-      problem.addConstraint (fdgDistanceSegment, distanceSegmentInterval, 1.);
-
-      // Add capsule distance constraint. The distance between the
-      // capsule and the polyhedron must be always negative
-      // (the polyhedron is contained in the capsule).
-      Function::interval_t distanceCapsuleInterval
-	= Function::makeUpperInterval (0.);
-
-      problem.addConstraint (fdgDistanceCapsule, distanceCapsuleInterval, 1.);
-
-      std::cout << problem << std::endl;
+	  // Add distance constraint. Distance must always be negative
+	  // (point remains inside capsule when as it shrinks).
+	  boost::shared_ptr<DistanceCapsulePoint>
+	    distance (new DistanceCapsulePoint (point, name.str ()));
+	  Function::interval_t distanceInterval
+	    = Function::makeUpperInterval (0.);
+	  
+	  problem.addConstraint (distance, distanceInterval, 1.);
+	}
 
       // Create solver using CFSQP.
       SolverFactory<solver_t> factory ("cfsqp", problem);
       solver_t& solver = factory ();
-      solver.parameters ()["cfsqp.iprint"].value = 2;
+      solver.parameters ()["cfsqp.iprint"].value = 0;
 
       // Solve problem and check if the optimum is correct.
       solver_t::result_t result = solver.minimum ();
