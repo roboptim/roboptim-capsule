@@ -26,15 +26,12 @@
 
 # include <roboptim/core/differentiable-function.hh>
 
+# include "roboptim/capsule/types.hh"
+
 namespace roboptim
 {
   namespace capsule
   {
-    /// \brief Import types from roboptim Function.
-    typedef roboptim::Function::value_type value_type;
-    typedef roboptim::Function::size_type size_type;
-    typedef roboptim::Function::argument_t argument_t;
-    
     /// \brief Capsule volume function.
     ///
     /// This class computes the volume of a capsule defined by a

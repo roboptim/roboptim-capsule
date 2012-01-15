@@ -26,24 +26,14 @@
 
 # include <kcd2/kcdInterface.h>
 
-# include <kcd/poly-segment.hh>
-
 # include <roboptim/core/function.hh>
+
+# include "roboptim/capsule/types.hh"
 
 namespace roboptim
 {
   namespace capsule
   {
-    /// \brief Import types from roboptim Function.
-    typedef roboptim::Function::value_type value_type;
-    typedef roboptim::Function::size_type size_type;
-    typedef roboptim::Function::argument_t argument_t;
-    
-    /// \brief Define geometry and analysis types.
-    typedef CkcdPolyhedronShPtr polyhedron_t;
-    typedef kcd::PolySegmentShPtr segment_t;
-    typedef CkcdAnalysisShPtr analysis_t;
-
     /// \brief Distance to polyhedron function.
     ///
     /// This class computes the separation distance between a segment

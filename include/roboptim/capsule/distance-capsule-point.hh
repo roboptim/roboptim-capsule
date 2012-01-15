@@ -28,20 +28,12 @@
 
 # include <roboptim/core/differentiable-function.hh>
 
+# include "roboptim/capsule/types.hh"
+
 namespace roboptim
 {
   namespace capsule
   {
-    /// \brief Import types from roboptim Function.
-    typedef roboptim::Function::value_type value_type;
-    typedef roboptim::Function::size_type size_type;
-    typedef roboptim::Function::argument_t argument_t;
-    typedef roboptim::Function::vector_t vector_t;
-    typedef roboptim::Function::matrix_t matrix_t;
-
-    /// \brief Define point type.
-    typedef CkcdPoint point_t;
-
     /// \brief Distance to point RobOptim function.
     class DistanceCapsulePoint
       : public roboptim::DifferentiableFunction

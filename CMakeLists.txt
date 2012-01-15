@@ -16,6 +16,7 @@ SET(PROJECT_URL "")
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 SET(${PROJECT_NAME}_HEADERS
+  include/roboptim/capsule/types.hh
   include/roboptim/capsule/volume.hh
   include/roboptim/capsule/distance-capsule-polyhedron.hh
   include/roboptim/capsule/distance-segment-polyhedron.hh

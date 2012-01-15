@@ -25,8 +25,8 @@
 # define ROBOPTIM_CAPSULE_FITTER_HH
 
 # include <roboptim/core/solver-factory.hh>
-# include <roboptim/core/plugin/cfsqp.hh>
 
+# include "roboptim/capsule/types.hh"
 # include "roboptim/capsule/volume.hh"
 # include "roboptim/capsule/distance-segment-polyhedron.hh"
 # include "roboptim/capsule/distance-capsule-polyhedron.hh"
@@ -35,9 +35,6 @@ namespace roboptim
 {
   namespace capsule
   {
-    /// \brief Import type from CFSQP solver.
-    typedef CFSQPSolver solver_t;
-
     /// \brief Capsule fitter class.
     ///
     /// This class computes the best fitting capsule over a
