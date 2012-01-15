@@ -65,6 +65,33 @@ namespace roboptim
       polyhedron_ = polyhedron;
     }
 
+    const value_type Fitter::
+    initVolume () const throw ()
+    {
+      assert (initVolume_ > 0
+	      && "Incorrect initial volume value. Must be non-negative.");
+
+      return initVolume_;
+    }
+
+    const value_type Fitter::
+    solutionVolume () const throw ()
+    {
+      assert (solutionVolume_ > 0
+	      && "Incorrect solution volume value. Must be non-negative.");
+
+      return solutionVolume_;
+    }
+
+    const argument_t Fitter::
+    initParam () const throw ()
+    {
+      assert (initParam_.size () == 7
+	      && "Incorrect initParam size, expected 7.");
+
+      return initParam_;
+    }
+
     const argument_t Fitter::
     solutionParam () const throw ()
     {
@@ -118,6 +145,8 @@ namespace roboptim
       // Define volume function. It is the cost of the optimization
       // problem.
       Volume volume;
+      initParam_ = initParam;
+      initVolume_ = volume (initParam)[0];
 
       // Define optimization problem with volume as cost function.
       solver_t::problem_t problem (volume);
@@ -183,16 +212,19 @@ namespace roboptim
 		      << solver.getMinimum<ResultWithWarnings> ()
 		      << std::endl;
 	    solutionParam = solver.getMinimum<ResultWithWarnings> ().x;
+	    break;
 	  }
 	case solver_t::SOLVER_VALUE:
 	  {
 	    // Display the result.
-	    std::cout << "A solution has been found" << std::endl
-		      << solver.getMinimum<Result> () << std::endl;
+	    std::cout << "A solution has been found" << std::endl;
 	    solutionParam = solver.getMinimum<Result> ().x;
 	    break;
 	  }
 	}
+
+      solutionParam_ = solutionParam;
+      solutionVolume_ = volume (solutionParam)[0];
     }
 
   } // end of namespace capsule.

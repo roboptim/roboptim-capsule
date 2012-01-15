@@ -55,6 +55,15 @@ namespace roboptim
       /// \brief Set polyhedron attribute.
       void polyhedron (const polyhedron_t& polyhedron) throw ();
 
+      /// \brief Get capsule volume for initial parameters.
+      const value_type initVolume () const throw ();
+
+      /// \brief Get capsule volume for solution parameters.
+      const value_type solutionVolume () const throw ();
+
+      /// \brief Get initial capsule parameters.
+      const argument_t initParam () const throw ();
+
       /// \brief Get solution capsule parameters.
       const argument_t solutionParam () const throw ();
 
@@ -111,9 +120,37 @@ namespace roboptim
       /// \brief Polyhedron attribute.
       polyhedron_t polyhedron_;
 
+      /// \brief Initial volume attribute.
+      value_type initVolume_;
+
+      /// \brief Solution volume attribute.
+      value_type solutionVolume_;
+      
+      /// \brief Capsule inital parameters attribute,
+      argument_t initParam_;
+
       /// \brief Capsule solution parameters attribute.
       argument_t solutionParam_;
     };
+
+    /// \brief Print fitter after optimal capsule has been computed.
+    ///
+    /// Initial parameters and volume are printed, then solution
+    /// parameters and volume are printed.
+    inline std::ostream& operator<< (std::ostream& os, const Fitter& fitter)
+    {
+      os << "initial parameters" << std::endl;
+      os << fitter.initParam () << std::endl;
+      os << "initial volume" << std::endl;
+      os << fitter.initVolume () << std::endl;
+      os << "solution parameters" << std::endl;
+      os << fitter.solutionParam () << std::endl;
+      os << "solution volume" << std::endl;
+      os << fitter.solutionVolume () << std::endl;
+      os << "-----------------------------------------------------------";
+
+      return os;
+    }
 
   } // end of namespace capsule.
 } // end of namespace roboptim.
