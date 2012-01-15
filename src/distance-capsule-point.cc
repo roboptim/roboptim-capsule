@@ -25,7 +25,7 @@
 #ifndef ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 # define ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 
-# include "kcd/util.hh"
+# include <kcd/util.hh>
 
 # include "roboptim/capsule/distance-capsule-point.hh"
 
