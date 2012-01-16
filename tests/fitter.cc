@@ -106,11 +106,7 @@ BOOST_AUTO_TEST_CASE (fitter)
   // Radius.
   initParam[6] = 100 * halfLength;
   
-  std::cout << "initial parameters" << std::endl
-	    << initParam << std::endl;
-
   // Compute best fitting capsule.
   fitter.computeBestFitCapsule (initParam);
-  std::cout << "solution parameters" << std::endl
-	    << fitter.solutionParam () << std::endl;
+  std::cout << fitter << std::endl;
 }
