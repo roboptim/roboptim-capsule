@@ -183,10 +183,16 @@ namespace roboptim
 	  problem.addConstraint (distance, distanceInterval, 1.);
 	}
 
-      // Create solver using CFSQP.
-      SolverFactory<solver_t> factory ("cfsqp", problem);
+      // Create solver using Ipopt.
+      SolverFactory<solver_t> factory ("ipopt", problem);
       solver_t& solver = factory ();
-      solver.parameters ()["cfsqp.iprint"].value = 0;
+      solver.parameters ()["ipopt.linear_solver"].value = "ma27";
+      solver.parameters ()["ipopt.derivative_test"].value = "first-order";
+      solver.parameters ()["ipopt.derivative_test_perturbation"].value = 10e-8;
+      solver.parameters ()["ipopt.print_level"].value = 5;
+      solver.parameters ()["ipopt.file_print_level"].value = 5;
+      solver.parameters ()["ipopt.print_user_options"].value = "yes";
+      solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.out";
 
       // Solve problem and check if the optimum is correct.
       solver_t::result_t result = solver.minimum ();

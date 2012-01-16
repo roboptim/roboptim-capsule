@@ -22,7 +22,7 @@
 # include <kcd2/kcdInterface.h>
 
 # include <roboptim/core/function.hh>
-# include <roboptim/core/plugin/cfsqp.hh>
+# include <roboptim/core/plugin/ipopt.hh>
 
 # include <kcd/poly-segment.hh>
 
@@ -38,7 +38,7 @@ namespace roboptim
     typedef roboptim::Function::matrix_t matrix_t;
 
     /// \brief Import type from CFSQP solver.
-    typedef CFSQPSolver solver_t;
+    typedef IpoptSolver solver_t;
 
     /// \brief Define point type.
     typedef CkcdPoint point_t;
