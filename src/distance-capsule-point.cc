@@ -125,9 +125,9 @@ namespace roboptim
       // Compute closest point jacobian wrt parameters.
       matrix_t jacobian (3, 7);
       jacobian.clear ();
-      jacobian(0,0) = - lambda;
-      jacobian(1,1) = - lambda;
-      jacobian(2,2) = - lambda;
+      jacobian(0,0) = 1 - lambda;
+      jacobian(1,1) = 1 - lambda;
+      jacobian(2,2) = 1 - lambda;
       jacobian(0,3) = lambda;
       jacobian(1,4) = lambda;
       jacobian(2,5) = lambda;
