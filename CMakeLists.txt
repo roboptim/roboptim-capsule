@@ -30,7 +30,7 @@ SETUP_PROJECT()
 
 # Declare dependencies
 SEARCH_FOR_BOOST()
-ADD_REQUIRED_DEPENDENCY("kcd-capsule")
+ADD_REQUIRED_DEPENDENCY("hpp-geometry")
 ADD_REQUIRED_DEPENDENCY("roboptim-core")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt")
 

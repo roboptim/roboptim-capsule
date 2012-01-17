@@ -44,7 +44,7 @@ namespace roboptim
       assert (!!polyhedron && "Null pointer to polyhedron.");
 
       // Create emtpy segment.
-      segment_ = kcd::PolySegment::create ();
+      segment_ = hpp::geometry::collision::PolySegment::create ();
 
       // Create analysis and add geometries in it.
       analysis_ = CkcdAnalysis::create ();

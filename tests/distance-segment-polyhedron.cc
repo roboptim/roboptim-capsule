@@ -22,11 +22,11 @@
 
 #include <KineoModel/kppLicense.h>
 
-#include "kcd/test-tree-segment.hh"
-#include "kcd/detector-segment-obb.hh"
-#include "kcd/detector-obb-segment.hh"
-#include "kcd/detector-segment-triangle.hh"
-#include "kcd/detector-triangle-segment.hh"
+#include "hpp/geometry/collision/test-tree-segment.hh"
+#include "hpp/geometry/collision/detector-segment-obb.hh"
+#include "hpp/geometry/collision/detector-obb-segment.hh"
+#include "hpp/geometry/collision/detector-segment-triangle.hh"
+#include "hpp/geometry/collision/detector-triangle-segment.hh"
 
 #include <roboptim/core/io.hh>
 #include <roboptim/core/finite-difference-gradient.hh>
@@ -38,7 +38,7 @@ using boost::test_tools::output_test_stream;
 BOOST_AUTO_TEST_CASE (distance_segment_polyhedron)
 {
   using namespace roboptim::capsule;
-  using namespace kcd;
+  using namespace hpp::geometry::collision;
 
   // Validate Kineo license.
   if (!CkppLicense::initialize ())

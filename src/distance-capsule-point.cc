@@ -25,7 +25,7 @@
 #ifndef ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 # define ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 
-# include <kcd/util.hh>
+# include <hpp/geometry/collision/util.hh>
 
 # include "roboptim/capsule/distance-capsule-point.hh"
 
@@ -60,6 +60,8 @@ namespace roboptim
     impl_compute (result_t & result,
 		  const argument_t & argument) const throw ()
     {
+      using namespace hpp::geometry::collision;
+
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
       result.clear ();
@@ -71,11 +73,11 @@ namespace roboptim
       // Compute distance between segment and point.
       kcdReal squareDistance;
       CkcdPoint segmentClosest;
-      kcd::computeSquareDistanceSegmentPoint (endPoint1,
-					      endPoint2,
-					      point_,
-					      squareDistance,
-					      segmentClosest);
+      computeSquareDistanceSegmentPoint (endPoint1,
+					 endPoint2,
+					 point_,
+					 squareDistance,
+					 segmentClosest);
       
       // Return difference between distance and capsule radius.
       result[0] = sqrt (squareDistance) - argument[6];
@@ -88,6 +90,8 @@ namespace roboptim
 		   const argument_t& argument,
 		   size_type functionId) const throw ()
     {
+      using namespace hpp::geometry::collision;
+
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
       gradient.clear ();
@@ -99,11 +103,11 @@ namespace roboptim
       // Compute distance between segment and point.
       kcdReal squareDistance;
       CkcdPoint segmentClosest;
-      kcd::computeSquareDistanceSegmentPoint (endPoint1,
-					      endPoint2,
-					      point_,
-					      squareDistance,
-					      segmentClosest);
+      computeSquareDistanceSegmentPoint (endPoint1,
+					 endPoint2,
+					 point_,
+					 squareDistance,
+					 segmentClosest);
       
       // Compute unit axis between closest points.
       CkcdPoint kcdUnit = segmentClosest - point_;

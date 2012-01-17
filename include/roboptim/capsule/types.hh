@@ -24,7 +24,7 @@
 # include <roboptim/core/function.hh>
 # include <roboptim/core/plugin/ipopt.hh>
 
-# include <kcd/poly-segment.hh>
+# include <hpp/geometry/collision/poly-segment.hh>
 
 namespace roboptim
 {
@@ -45,7 +45,7 @@ namespace roboptim
 
     /// \brief Define geometry types.
     typedef CkcdPolyhedronShPtr polyhedron_t;
-    typedef kcd::PolySegmentShPtr segment_t;
+    typedef hpp::geometry::collision::PolySegmentShPtr segment_t;
 
     /// \brief Define analysis type.
     typedef CkcdAnalysisShPtr analysis_t;

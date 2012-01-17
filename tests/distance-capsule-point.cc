@@ -25,7 +25,7 @@
 #include <roboptim/core/io.hh>
 #include <roboptim/core/finite-difference-gradient.hh>
 
-#include <kcd/util.hh>
+#include <hpp/geometry/collision/util.hh>
 
 #include "roboptim/capsule/distance-capsule-point.hh"
 
@@ -34,7 +34,7 @@ using boost::test_tools::output_test_stream;
 BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
 {
   using namespace roboptim::capsule;
-  using namespace kcd;
+  using namespace hpp::geometry::collision;
 
   // Validate Kineo license.
   if (!CkppLicense::initialize ())
