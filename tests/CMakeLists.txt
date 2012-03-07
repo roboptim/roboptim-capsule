@@ -21,6 +21,7 @@ MACRO(ADD_TESTCASE NAME)
 
   PKG_CONFIG_USE_DEPENDENCY(${NAME} hpp-geometry)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} roboptim-core)
+  PKG_CONFIG_USE_DEPENDENCY(${NAME} roboptim-core-plugin-ipopt)
 
   # Link against package library.
   TARGET_LINK_LIBRARIES(${NAME} 
