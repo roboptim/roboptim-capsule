@@ -186,7 +186,7 @@ namespace roboptim
       // Create solver using Ipopt.
       SolverFactory<solver_t> factory ("ipopt", problem);
       solver_t& solver = factory ();
-      solver.parameters ()["ipopt.linear_solver"].value = "ma27";
+      solver.parameters ()["ipopt.linear_solver"].value = "mumps";
       solver.parameters ()["ipopt.derivative_test"].value = "first-order";
       solver.parameters ()["ipopt.derivative_test_perturbation"].value = 10e-8;
       solver.parameters ()["ipopt.print_level"].value = 5;
