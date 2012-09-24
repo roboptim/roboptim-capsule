@@ -86,10 +86,13 @@ BOOST_AUTO_TEST_CASE (fitter)
 
   polyhedron->makeCollisionEntity (CkcdObject::IMMEDIATE_BUILD);
 
+  polyhedrons_t polyhedrons;
+  polyhedrons.push_back (polyhedron);
+
   // Create fitter. It is used to find the best fitting capsule on the
   // polyhedron.
 
-  Fitter fitter (polyhedron);
+  Fitter fitter (polyhedrons);
 
   // Define initial capsule parameters. The segment must be inside the
   // polyhedron, and the capsule must contain the polyhedron.

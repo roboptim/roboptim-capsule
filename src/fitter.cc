@@ -39,8 +39,8 @@ namespace roboptim
     // -------------------PUBLIC FUNCTIONS-----------------------
 
     Fitter::
-    Fitter (const polyhedron_t& polyhedron) throw ()
-      : polyhedron_ (polyhedron)
+    Fitter (const polyhedrons_t& polyhedrons) throw ()
+      : polyhedrons_ (polyhedrons)
     {
       argument_t param (7);
       param.clear ();
@@ -52,17 +52,17 @@ namespace roboptim
     {
     }
 
-    const polyhedron_t Fitter::
-    polyhedron () const throw ()
+    const polyhedrons_t Fitter::
+    polyhedrons () const throw ()
     {
-      return polyhedron_;
+      return polyhedrons_;
     }
 
     void Fitter::
-    polyhedron (const polyhedron_t& polyhedron) throw ()
+    polyhedrons (const polyhedrons_t& polyhedrons) throw ()
     {
-      assert (!!polyhedron && "Null pointer to polyhedron.");
-      polyhedron_ = polyhedron;
+      assert (polyhedrons.size () != 0 && "Empty polyhedron vector.");
+      polyhedrons_ = polyhedrons;
     }
 
     const value_type Fitter::
@@ -104,29 +104,29 @@ namespace roboptim
     void Fitter::
     computeBestFitCapsule (const argument_t& initParam) throw ()
     {
-      impl_computeBestFitCapsuleParam (polyhedron_, initParam, solutionParam_);
+      impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
     }
 
     void Fitter::
-    computeBestFitCapsule (const polyhedron_t& polyhedron,
+    computeBestFitCapsule (const polyhedrons_t& polyhedrons,
 			   const argument_t& initParam) throw ()
     {
-      impl_computeBestFitCapsuleParam (polyhedron, initParam, solutionParam_);
+      impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
     }
 
     const argument_t Fitter::
     computeBestFitCapsuleParam (const argument_t& initParam) throw ()
     {
-      impl_computeBestFitCapsuleParam (polyhedron_, initParam, solutionParam_);
+      impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
 
       return solutionParam_;
     }
 
     const argument_t Fitter::
-    computeBestFitCapsuleParam (const polyhedron_t& polyhedron,
+    computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
 				const argument_t& initParam) throw ()
     {
-      impl_computeBestFitCapsuleParam (polyhedron, initParam, solutionParam_);
+      impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
       
       return solutionParam_;
     }
@@ -134,11 +134,11 @@ namespace roboptim
     // -------------------PROTECTED FUNCTIONS--------------------
 
     void Fitter::
-    impl_computeBestFitCapsuleParam (const polyhedron_t& polyhedron,
+    impl_computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
 				     const argument_t& initParam,
 				     argument_t& solutionParam) throw ()
     {
-      assert (!!polyhedron && "Null pointer to polyhedron");
+      assert (polyhedrons.size () != 0 && "Empty polyhedron vector");
       assert (initParam.size () == 7
 	      && "Incorrect initParam size, expected 7.");
       
@@ -160,27 +160,31 @@ namespace roboptim
       // Cycle through polyhedron points and define distance
       // functions. They are the constraints of the optimization
       // problem.
-      CkcdMat4 transform;
-      polyhedron->getAbsolutePosition (transform);
-
-      for (unsigned i = 0; i < polyhedron->countPoints (); ++i)
+      for (unsigned i = 0; i < polyhedrons.size (); ++i)
 	{
-	  CkcdPoint point;
-	  polyhedron->getPoint (i, point);
-	  point = transform * point;
-	
-	  std::string s = "distance to point ";
-	  std::stringstream name;
-	  name << s << i;
+	  polyhedron_t polyhedron = polyhedrons[i];
+	  CkcdMat4 transform;
+	  polyhedron->getAbsolutePosition (transform);
 
-	  // Add distance constraint. Distance must always be negative
-	  // (point remains inside capsule when as it shrinks).
-	  boost::shared_ptr<DistanceCapsulePoint>
-	    distance (new DistanceCapsulePoint (point, name.str ()));
-	  Function::interval_t distanceInterval
-	    = Function::makeUpperInterval (0.);
+	  for (unsigned j = 0; j < polyhedron->countPoints (); ++j)
+	    {
+	      CkcdPoint point;
+	      polyhedron->getPoint (j, point);
+	      point = transform * point;
+	
+	      std::string s = "distance to point ";
+	      std::stringstream name;
+	      name << s << j;
+
+	      // Add distance constraint. Distance must always be negative
+	      // (point remains inside capsule when as it shrinks).
+	      boost::shared_ptr<DistanceCapsulePoint>
+		distance (new DistanceCapsulePoint (point, name.str ()));
+	      Function::interval_t distanceInterval
+		= Function::makeUpperInterval (0.);
 	  
-	  problem.addConstraint (distance, distanceInterval, 1.);
+	      problem.addConstraint (distance, distanceInterval, 1.);
+	    }
 	}
 
       // Create solver using Ipopt.

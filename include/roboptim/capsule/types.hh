@@ -45,6 +45,7 @@ namespace roboptim
 
     /// \brief Define geometry types.
     typedef CkcdPolyhedronShPtr polyhedron_t;
+    typedef std::vector<polyhedron_t> polyhedrons_t;
     typedef hpp::geometry::collision::PolySegmentShPtr segment_t;
 
     /// \brief Define analysis type.
