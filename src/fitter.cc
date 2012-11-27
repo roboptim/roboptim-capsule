@@ -202,14 +202,18 @@ namespace roboptim
 	case solver_t::SOLVER_NO_SOLUTION:
 	  {
 	    std::cerr << "No solution." << std::endl;
-	    solutionParam.clear ();
+	    solutionParam = initParam_;
+	    break;
 	  }
 	case solver_t::SOLVER_ERROR:
 	  {
+	    // Display error and fall back gracefully to initial
+	    // guess.
 	    std::cerr << "An error happened: " << std::endl
-		      << solver.getMinimum<SolverError> ().what ()
-		      << std::endl;
-	    solutionParam.clear ();
+	    	      << solver.getMinimum<SolverError> ().what ()
+	    	      << std::endl;
+	    solutionParam = initParam_;
+	    break;
 	  }
 	case solver_t::SOLVER_VALUE_WARNINGS:
 	  {
