@@ -21,8 +21,11 @@
 
 # include <iostream>
 
+# include <boost/foreach.hpp>
+
 # include <geometric-tools/Wm5Capsule3.h>
 # include <geometric-tools/Wm5ContCapsule3.h>
+# include <geometric-tools/Wm5ConvexHull3.h>
 
 # include <roboptim/capsule/fwd.hh>
 # include <roboptim/capsule/types.hh>
@@ -83,6 +86,28 @@ namespace roboptim
       radius = src[6];
     }
 
+    /// \brief Convert a polyhedron vector to a single polyhedron.
+    ///
+    /// Result polyhedron is the union of all polyhedrons.
+    ///
+    /// \param polyhedrons polyhedron vector containing all
+    /// polyhedrons.
+    ///
+    /// \return polyhedron union polyhedron
+    inline void
+    convertPolyhedronVectorToPolyhedron (polyhedron_t& polyhedron,
+					 const polyhedrons_t& polyhedrons)
+    {
+      assert (polyhedrons.size () !=0 && "Empty polyhedron vector.");
+      assert (polyhedron.size () == 0 && "Union polyhedron must be empty.");
+
+      BOOST_FOREACH (polyhedron_t poly, polyhedrons)
+	{
+	  BOOST_FOREACH (point_t point, poly)
+	    polyhedron.push_back (point);
+	}
+    }
+
     /// \brief Compute bounding capsule of a vector of polyhedrons.
     ///
     /// Compute axis of capsule segment using least-squares fit. Radius
@@ -126,6 +151,56 @@ namespace roboptim
       endPoint1 = capsule.Segment.P0;
       endPoint2 = capsule.Segment.P1;
       radius = capsule.Radius;
+    }
+
+    /// \brief Compute the convex polyhedron over a vector of
+    /// polyhedrons.
+    ///
+    /// Compute the polygon representing the convex hull of the union
+    /// of all polyhedrons in a vector, and store it in a one-element
+    /// vector.
+    ///
+    /// \param polyhedrons vector of polyhedrons that contain the
+    /// points
+    ///
+    /// \return convexPolyhedron vector of polyhedrons containing one
+    /// element, i.e. the convex hull.
+    inline void
+    computeConvexPolyhedron (const polyhedrons_t& polyhedrons,
+			     polyhedrons_t& convexPolyhedrons)
+    {
+      assert (polyhedrons.size () !=0 && "Empty polyhedron vector.");
+      assert (convexPolyhedrons.size() == 0
+	      && "Convex polyhedron vector must be empty.");
+
+      polyhedron_t polyhedron;
+      convertPolyhedronVectorToPolyhedron (polyhedron, polyhedrons);
+
+      point_t points[polyhedron.size ()];
+      for (unsigned i = 0; i < polyhedron.size (); ++i)
+	points[i] = polyhedron[i];
+
+      Wm5::ConvexHull3<value_type> convexHull
+	(polyhedron.size (), points, 1e-8, false, Wm5::Query::QT_INT64);
+
+      // Build convex polyhedron that contains unique points.
+      polyhedron_t convexPolyhedron;
+      std::set<int> addedVertices;
+      for (unsigned i = 0; i < convexHull.GetNumSimplices (); ++i)
+	{
+	  for (unsigned j = 0; j < 3; ++j)
+	    {
+	      int index = convexHull.GetIndices ()[3*i+j];
+	      if (addedVertices.find (index) == addedVertices.end ())
+		{
+		  point_t p (points[index]);
+		  convexPolyhedron.push_back (p);
+		  addedVertices.insert (index);
+		}
+	    }
+	}
+
+      convexPolyhedrons.push_back (convexPolyhedron);
     }
 
   } // end of namespace capsule.

@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE (fitter)
 {
   using namespace roboptim::capsule;
 
-  // Build a cubic polyhedron.
+  // Build a cubic polyhedron centered in (0,0,0).
   polyhedron_t polyhedron;
   value_type halfLength = 0.5;
 
@@ -45,18 +45,27 @@ BOOST_AUTO_TEST_CASE (fitter)
   polyhedrons_t polyhedrons;
   polyhedrons.push_back (polyhedron);
 
-  // Create fitter. It is used to find the best fitting capsule on the
-  // polyhedron.
-  Fitter fitter (polyhedrons);
-
   // Define initial capsule parameters. The segment must be inside the
   // polyhedron, and the capsule must contain the polyhedron.
   //
+  //
   // To do so, compute initial guess by finding a bounding capsule
   // (not the minimum one).
+  // 
+  // If needed, the convex hull of the polyhedron can be first computed
+  // to reduce the number of constraints and accelerate the optimization
+  // phase.
+  polyhedrons_t convexPolyhedrons;
+  computeConvexPolyhedron (polyhedrons, convexPolyhedrons);
+
+  // Create fitter. It is used to find the best fitting capsule on the
+  // polyhedron vector.
+  Fitter fitter (convexPolyhedrons);
+
   point_t endPoint1, endPoint2;
   value_type radius;
-  computeBoundingCapsulePolyhedron (polyhedrons, endPoint1, endPoint2, radius);
+  computeBoundingCapsulePolyhedron (convexPolyhedrons,
+				    endPoint1, endPoint2, radius);
 
   argument_t initParam (7);
   convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
