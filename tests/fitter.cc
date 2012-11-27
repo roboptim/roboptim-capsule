@@ -51,19 +51,16 @@ BOOST_AUTO_TEST_CASE (fitter)
 
   // Define initial capsule parameters. The segment must be inside the
   // polyhedron, and the capsule must contain the polyhedron.
-  argument_t initParam (7);
+  //
+  // To do so, compute initial guess by finding a bounding capsule
+  // (not the minimum one).
+  point_t endPoint1, endPoint2;
+  value_type radius;
+  computeBoundingCapsulePolyhedron (polyhedrons, endPoint1, endPoint2, radius);
 
-  // First end point.
-  initParam[0] = 0.;
-  initParam[1] = 0.;
-  initParam[2] = - halfLength / 4;
-  // Second end point.
-  initParam[3] = 0.;
-  initParam[4] = 0.;
-  initParam[5] = halfLength / 4;
-  // Radius.
-  initParam[6] = 100 * halfLength;
-  
+  argument_t initParam (7);
+  convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
+
   // Compute best fitting capsule.
   fitter.computeBestFitCapsule (initParam);
   std::cout << fitter << std::endl;
