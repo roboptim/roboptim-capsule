@@ -33,6 +33,8 @@
    best the underlying geometry, which is usually modeled by one or
    more polyhedrons.
 
+   \image html examples.png
+
    A capsule can be uniquely defined by its two main axis end points
    \f$e_1\f$ and \f$e_2\f$, as well as its radius \f$r\f$. The
    roboptim-capsule optimizer takes as input one or more polyhedrons,
