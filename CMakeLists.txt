@@ -7,7 +7,6 @@ INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/kineo.cmake)
 
 SET(PROJECT_NAME roboptim-capsule)
-SET(PROJECT_VERSION 0.1)
 SET(PROJECT_DESCRIPTION
   "Utility package for computing best fit capsule over a polygon soup.")
 SET(PROJECT_URL "")
