@@ -72,5 +72,6 @@ BOOST_AUTO_TEST_CASE (fitter)
 
   // Compute best fitting capsule.
   fitter.computeBestFitCapsule (initParam);
+  argument_t solutionParam = fitter.solutionParam ();
   std::cout << fitter << std::endl;
 }
