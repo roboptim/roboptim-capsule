@@ -128,18 +128,17 @@ namespace roboptim
       assert (polyhedrons.size () !=0 && "Empty polyhedron vector.");
 
       // Retrieve vector of points from polyhedrons.
-      unsigned nbPoints = 0;
-      for (unsigned i = 0; i < polyhedrons.size (); ++i)
-	nbPoints += polyhedrons[i].size ();
+      size_type nbPoints = 0;
+      BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
+	nbPoints += polyhedron.size ();
 
       point_t points[nbPoints];
-      unsigned k = 0;
-      for (unsigned i = 0; i < polyhedrons.size (); ++i)
+      size_type k = 0;
+      BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	{
-	  polyhedron_t polyhedron = polyhedrons[i];
-	  for (unsigned j = 0; j < polyhedron.size (); ++j)
+	  BOOST_FOREACH (point_t point, polyhedron)
 	    {
-	      points[k] = polyhedron[j];
+	      points[k] = point;
 	      ++k;
 	    }
 	}
@@ -177,7 +176,7 @@ namespace roboptim
       convertPolyhedronVectorToPolyhedron (polyhedron, polyhedrons);
 
       point_t points[polyhedron.size ()];
-      for (unsigned i = 0; i < polyhedron.size (); ++i)
+      for (size_type i = 0; i < polyhedron.size (); ++i)
 	points[i] = polyhedron[i];
 
       Wm5::ConvexHull3<value_type> convexHull
@@ -186,11 +185,11 @@ namespace roboptim
       // Build convex polyhedron that contains unique points.
       polyhedron_t convexPolyhedron;
       std::set<int> addedVertices;
-      for (unsigned i = 0; i < convexHull.GetNumSimplices (); ++i)
+      for (size_type i = 0; i < convexHull.GetNumSimplices (); ++i)
 	{
-	  for (unsigned j = 0; j < 3; ++j)
+	  for (size_type j = 0; j < 3; ++j)
 	    {
-	      int index = convexHull.GetIndices ()[3*i+j];
+	      size_type index = convexHull.GetIndices ()[3*i+j];
 	      if (addedVertices.find (index) == addedVertices.end ())
 		{
 		  point_t p (points[index]);

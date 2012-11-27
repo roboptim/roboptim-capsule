@@ -160,11 +160,9 @@ namespace roboptim
       // Cycle through polyhedron points and define distance
       // functions. They are the constraints of the optimization
       // problem.
-      for (unsigned i = 0; i < polyhedrons.size (); ++i)
+      BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	{
-	  polyhedron_t polyhedron = polyhedrons[i];
-
-	  for (unsigned j = 0; j < polyhedron.size (); ++j)
+	  for (size_type j = 0; j < polyhedron.size (); ++j)
 	    {
 	      point_t point = polyhedron[j];
 	
