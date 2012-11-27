@@ -1,4 +1,4 @@
-// Copyright (C) 2012 by Antonio El Khoury.
+// Copyright (C) 2012 by Antonio El Khoury, CNRS.
 //
 // This file is part of the roboptim-capsule.
 //
