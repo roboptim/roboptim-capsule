@@ -20,78 +20,33 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
-#include <KineoModel/kppLicense.h>
-
-#include "hpp/geometry/collision/test-tree-segment.hh"
-#include "hpp/geometry/collision/detector-segment-obb.hh"
-#include "hpp/geometry/collision/detector-obb-segment.hh"
-#include "hpp/geometry/collision/detector-segment-triangle.hh"
-#include "hpp/geometry/collision/detector-triangle-segment.hh"
-
-#include "roboptim/capsule/fitter.hh"
+#include <roboptim/capsule/util.hh>
+#include <roboptim/capsule/fitter.hh>
 
 using boost::test_tools::output_test_stream;
 
 BOOST_AUTO_TEST_CASE (fitter)
 {
   using namespace roboptim::capsule;
-  using namespace hpp::geometry::collision;
 
-  // Validate Kineo license.
-  if (!CkppLicense::initialize ())
-    {
-      std::cout << "Failed to validate Kineo license." << std::endl;
-      return;
-    }
+  // Build a cubic polyhedron.
+  polyhedron_t polyhedron;
+  value_type halfLength = 0.5;
 
-  // Register segment test tree and detector.
-  CkcdGlobal::instance ().registerTestTreeLocked
-    (&CkcdGlobal::createTestTreeLocked<TestTreeSegment>);
-  CkcdGlobal::instance ().registerDetector
-    (&CkcdGlobal::createDetector<DetectorSegmentOBB>);
-  CkcdGlobal::instance ().registerDetector
-    (&CkcdGlobal::createDetector<DetectorOBBSegment>);
-  CkcdGlobal::instance ().registerDetector
-    (&CkcdGlobal::createDetector<DetectorSegmentTriangle>);
-  CkcdGlobal::instance ().registerDetector
-    (&CkcdGlobal::createDetector<DetectorTriangleSegment>);
-
-  // Build cubic polyhedron.
-  CkcdPolyhedronShPtr polyhedron = CkcdPolyhedron::create ();
-  unsigned int rank;
-  kcdReal halfLength = 0.5f;
-
-  polyhedron->addPoint(-halfLength, -halfLength, -halfLength, rank);
-  polyhedron->addPoint(-halfLength, -halfLength, halfLength, rank);
-  polyhedron->addPoint(-halfLength, halfLength, -halfLength, rank);
-  polyhedron->addPoint(-halfLength, halfLength, halfLength, rank);
-  polyhedron->addPoint(halfLength, -halfLength, -halfLength, rank);
-  polyhedron->addPoint(halfLength, -halfLength, halfLength, rank);
-  polyhedron->addPoint(halfLength, halfLength, -halfLength, rank);
-  polyhedron->addPoint(halfLength, halfLength, halfLength, rank);
-
-  polyhedron->reserveNTriangles(12);
-  polyhedron->addTriangle(3,7,5, rank);
-  polyhedron->addTriangle(3,5,1, rank);
-  polyhedron->addTriangle(2,3,1, rank);
-  polyhedron->addTriangle(2,1,0, rank);
-  polyhedron->addTriangle(6,2,0, rank);
-  polyhedron->addTriangle(6,0,4, rank);
-  polyhedron->addTriangle(7,6,4, rank);
-  polyhedron->addTriangle(7,4,5, rank);
-  polyhedron->addTriangle(2,6,7, rank);
-  polyhedron->addTriangle(2,7,3, rank);
-  polyhedron->addTriangle(1,5,4, rank);
-  polyhedron->addTriangle(1,4,0, rank);
-
-  polyhedron->makeCollisionEntity (CkcdObject::IMMEDIATE_BUILD);
+  polyhedron.push_back (point_t (-halfLength, -halfLength, -halfLength));
+  polyhedron.push_back (point_t (-halfLength, -halfLength, halfLength));
+  polyhedron.push_back (point_t (-halfLength, halfLength, -halfLength));
+  polyhedron.push_back (point_t (-halfLength, halfLength, halfLength));
+  polyhedron.push_back (point_t (halfLength, -halfLength, -halfLength));
+  polyhedron.push_back (point_t (halfLength, -halfLength, halfLength));
+  polyhedron.push_back (point_t (halfLength, halfLength, -halfLength));
+  polyhedron.push_back (point_t (halfLength, halfLength, halfLength));
 
   polyhedrons_t polyhedrons;
   polyhedrons.push_back (polyhedron);
 
   // Create fitter. It is used to find the best fitting capsule on the
   // polyhedron.
-
   Fitter fitter (polyhedrons);
 
   // Define initial capsule parameters. The segment must be inside the

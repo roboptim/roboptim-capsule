@@ -20,12 +20,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
-#include <KineoModel/kppLicense.h>
-
 #include <roboptim/core/io.hh>
 #include <roboptim/core/finite-difference-gradient.hh>
-
-#include <hpp/geometry/collision/util.hh>
 
 #include "roboptim/capsule/distance-capsule-point.hh"
 
@@ -34,44 +30,19 @@ using boost::test_tools::output_test_stream;
 BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
 {
   using namespace roboptim::capsule;
-  using namespace hpp::geometry::collision;
-
-  // Validate Kineo license.
-  if (!CkppLicense::initialize ())
-    {
-      std::cout << "Failed to validate Kineo license." << std::endl;
-      return;
-    }
 
   // Build cubic polyhedron.
-  CkcdPolyhedronShPtr polyhedron = CkcdPolyhedron::create ();
-  unsigned int rank;
-  kcdReal halfLength = 0.5f;
+  polyhedron_t polyhedron;
+  value_type halfLength = 0.5;
 
-  polyhedron->addPoint(-halfLength, -halfLength, -halfLength, rank);
-  polyhedron->addPoint(-halfLength, -halfLength, halfLength, rank);
-  polyhedron->addPoint(-halfLength, halfLength, -halfLength, rank);
-  polyhedron->addPoint(-halfLength, halfLength, halfLength, rank);
-  polyhedron->addPoint(halfLength, -halfLength, -halfLength, rank);
-  polyhedron->addPoint(halfLength, -halfLength, halfLength, rank);
-  polyhedron->addPoint(halfLength, halfLength, -halfLength, rank);
-  polyhedron->addPoint(halfLength, halfLength, halfLength, rank);
-
-  polyhedron->reserveNTriangles(12);
-  polyhedron->addTriangle(3,7,5, rank);
-  polyhedron->addTriangle(3,5,1, rank);
-  polyhedron->addTriangle(2,3,1, rank);
-  polyhedron->addTriangle(2,1,0, rank);
-  polyhedron->addTriangle(6,2,0, rank);
-  polyhedron->addTriangle(6,0,4, rank);
-  polyhedron->addTriangle(7,6,4, rank);
-  polyhedron->addTriangle(7,4,5, rank);
-  polyhedron->addTriangle(2,6,7, rank);
-  polyhedron->addTriangle(2,7,3, rank);
-  polyhedron->addTriangle(1,5,4, rank);
-  polyhedron->addTriangle(1,4,0, rank);
-
-  polyhedron->makeCollisionEntity (CkcdObject::IMMEDIATE_BUILD);
+  polyhedron.push_back (point_t (-halfLength, -halfLength, -halfLength));
+  polyhedron.push_back (point_t (-halfLength, -halfLength, halfLength));
+  polyhedron.push_back (point_t (-halfLength, halfLength, -halfLength));
+  polyhedron.push_back (point_t (-halfLength, halfLength, halfLength));
+  polyhedron.push_back (point_t (halfLength, -halfLength, -halfLength));
+  polyhedron.push_back (point_t (halfLength, -halfLength, halfLength));
+  polyhedron.push_back (point_t (halfLength, halfLength, -halfLength));
+  polyhedron.push_back (point_t (halfLength, halfLength, halfLength));
 
   // Compute distance for capsule given by argument.
   argument_t argument (7);
@@ -87,16 +58,11 @@ BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
   // Radius.
   argument[6] = sqrt (3) / 2;
 
-  CkcdMat4 transform;
-  polyhedron->getAbsolutePosition (transform);
-
   // Cycle throught all points in cube polyhedron.
-  for (unsigned i = 0; i < polyhedron->countPoints (); ++i)
+  for (unsigned i = 0; i < polyhedron.size (); ++i)
     {
       // Create distance function.
-      CkcdPoint point;
-      polyhedron->getPoint (i, point);
-      point = transform * point;
+      point_t point = polyhedron[i];
       DistanceCapsulePoint distanceFunction (point,
 					     "distance capsule to point");
 
@@ -112,5 +78,8 @@ BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
       std::cout << distanceFunction.gradient (argument) << std::endl;
       std::cout << "finite difference gradient" << std::endl;
       std::cout << fdgDistanceFunction.gradient (argument) << std::endl;
+
+      BOOST_CHECK_EQUAL (checkGradient (distanceFunction, 0, argument, 1e-6),
+			 true);
     }
 }

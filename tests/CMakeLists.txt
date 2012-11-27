@@ -1,9 +1,6 @@
 # Add Boost path to include directories.
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
-# Add src to link directories.
-LINK_DIRECTORIES(../src)
-
 # Make Boost.Test generates the main function in test cases.
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
@@ -31,16 +28,5 @@ ENDMACRO(ADD_TESTCASE)
 
 # Generated test.
 ADD_TESTCASE(capsule-volume)
-KINEO_STANDALONE(capsule-volume)
-
-ADD_TESTCASE(distance-capsule-polyhedron)
-KINEO_STANDALONE(distance-capsule-polyhedron)
-
-ADD_TESTCASE(distance-segment-polyhedron)
-KINEO_STANDALONE(distance-segment-polyhedron)
-
 ADD_TESTCASE(distance-capsule-point)
-KINEO_STANDALONE(distance-capsule-point)
-
 ADD_TESTCASE(fitter)
-KINEO_STANDALONE(fitter)

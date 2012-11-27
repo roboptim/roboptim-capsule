@@ -21,10 +21,11 @@
 
 # include <iostream>
 
-# include <kcd2/kcdInterface.h>
+# include <geometric-tools/Wm5Capsule3.h>
+# include <geometric-tools/Wm5ContCapsule3.h>
 
-# include "roboptim/capsule/fwd.hh"
-# include "roboptim/capsule/types.hh"
+# include <roboptim/capsule/fwd.hh>
+# include <roboptim/capsule/types.hh>
 
 namespace roboptim
 {
@@ -40,9 +41,9 @@ namespace roboptim
     /// order, the capsule axis first end point coordinates, the
     /// capsule axis second end point coordinates and the radius.
     inline void convertCapsuleToSolverParam (argument_t& dst,
-					     const CkcdPoint& endPoint1,
-					     const CkcdPoint& endPoint2,
-					     const kcdReal& radius)
+					     const point_t& endPoint1,
+					     const point_t& endPoint2,
+					     const value_type& radius)
     {
       dst.resize (7);
 
@@ -64,9 +65,9 @@ namespace roboptim
     /// \return endPoint1 capsule axis first end point
     /// \return endPoint2 capsule axis second end point
     /// \return radius capsule radius
-    inline void convertSolverParamToCapsule (CkcdPoint& endPoint1,
-					     CkcdPoint& endPoint2,
-					     kcdReal& radius,
+    inline void convertSolverParamToCapsule (point_t& endPoint1,
+					     point_t& endPoint2,
+					     value_type& radius,
 					     const argument_t src)
     {
       assert (src.size () == 7 && "Incorrect src size, expected 7.");

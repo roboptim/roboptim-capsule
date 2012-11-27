@@ -28,8 +28,6 @@ namespace roboptim
   {
     class Volume;
     class DistanceCapsulePoint;
-    class DistanceCapsulePolyhedron;
-    class DistanceSegmentPolyhedron;
     class Fitter;
   } // end of namespace capsule.
 } // end of namespace kcd.

@@ -27,7 +27,7 @@
 
 # include <math.h>
 
-# include "roboptim/capsule/volume.hh"
+# include <roboptim/capsule/volume.hh>
 
 namespace roboptim
 {

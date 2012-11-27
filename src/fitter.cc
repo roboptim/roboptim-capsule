@@ -30,7 +30,7 @@
 
 # include <roboptim/core/finite-difference-gradient.hh>
 
-# include "roboptim/capsule/fitter.hh"
+# include <roboptim/capsule/fitter.hh>
 
 namespace roboptim
 {
@@ -163,14 +163,10 @@ namespace roboptim
       for (unsigned i = 0; i < polyhedrons.size (); ++i)
 	{
 	  polyhedron_t polyhedron = polyhedrons[i];
-	  CkcdMat4 transform;
-	  polyhedron->getAbsolutePosition (transform);
 
-	  for (unsigned j = 0; j < polyhedron->countPoints (); ++j)
+	  for (unsigned j = 0; j < polyhedron.size (); ++j)
 	    {
-	      CkcdPoint point;
-	      polyhedron->getPoint (j, point);
-	      point = transform * point;
+	      point_t point = polyhedron[j];
 	
 	      std::string s = "distance to point ";
 	      std::stringstream name;
@@ -182,7 +178,7 @@ namespace roboptim
 		distance (new DistanceCapsulePoint (point, name.str ()));
 	      Function::interval_t distanceInterval
 		= Function::makeUpperInterval (0.);
-	  
+
 	      problem.addConstraint (distance, distanceInterval, 1.);
 	    }
 	}

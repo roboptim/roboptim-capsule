@@ -19,12 +19,11 @@
 #ifndef ROBOPTIM_CAPSULE_FWD_HH_
 # define ROBOPTIM_CAPSULE_FWD_HH_
 
-# include <kcd2/kcdInterface.h>
+# include <geometric-tools/Wm5Vector3.h>
+# include <geometric-tools/Wm5Segment3.h>
 
 # include <roboptim/core/function.hh>
 # include <roboptim/core/plugin/ipopt.hh>
-
-# include <hpp/geometry/collision/poly-segment.hh>
 
 namespace roboptim
 {
@@ -37,19 +36,14 @@ namespace roboptim
     typedef roboptim::Function::vector_t vector_t;
     typedef roboptim::Function::matrix_t matrix_t;
 
-    /// \brief Import type from CFSQP solver.
+    /// \brief Import type from IPOPT solver.
     typedef IpoptSolver solver_t;
 
-    /// \brief Define point type.
-    typedef CkcdPoint point_t;
-
     /// \brief Define geometry types.
-    typedef CkcdPolyhedronShPtr polyhedron_t;
+    typedef Wm5::Vector3<value_type> point_t;
+    typedef std::vector<point_t> polyhedron_t;
     typedef std::vector<polyhedron_t> polyhedrons_t;
-    typedef hpp::geometry::collision::PolySegmentShPtr segment_t;
-
-    /// \brief Define analysis type.
-    typedef CkcdAnalysisShPtr analysis_t;
+    typedef Wm5::Segment3<value_type> segment_t;
 
   } // end of namespace capsule.
 } // end of namespace roboptim.

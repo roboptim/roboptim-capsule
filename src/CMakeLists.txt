@@ -3,15 +3,15 @@ SET(LIBRARY_NAME ${PROJECT_NAME})
 ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
   volume.cc
-  distance-capsule-polyhedron.cc
-  distance-segment-polyhedron.cc
   distance-capsule-point.cc
   fitter.cc
   )
 
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
-PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-geometry)
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME}
+  ${LIB_GEOMETRIC_TOOLS_CORE}
+  ${LIB_GEOMETRIC_TOOLS_MATH})
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} roboptim-core-plugin-ipopt)
 

@@ -24,11 +24,9 @@
 #ifndef ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_HH
 # define ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_HH
 
-# include <kcd2/kcdInterface.h>
-
 # include <roboptim/core/differentiable-function.hh>
 
-# include "roboptim/capsule/types.hh"
+# include <roboptim/capsule/types.hh>
 
 namespace roboptim
 {

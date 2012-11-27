@@ -4,7 +4,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 SET(CXX_DISABLE_WERROR TRUE)
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
-INCLUDE(cmake/kineo.cmake)
+INCLUDE(cmake/geometric-tools.cmake)
 
 SET(PROJECT_NAME roboptim-capsule)
 SET(PROJECT_DESCRIPTION
@@ -19,8 +19,6 @@ SET(${PROJECT_NAME}_HEADERS
   include/roboptim/capsule/types.hh
   include/roboptim/capsule/util.hh
   include/roboptim/capsule/volume.hh
-  include/roboptim/capsule/distance-capsule-polyhedron.hh
-  include/roboptim/capsule/distance-segment-polyhedron.hh
   include/roboptim/capsule/distance-capsule-point.hh
   include/roboptim/capsule/fitter.hh
   )
@@ -29,7 +27,7 @@ SETUP_PROJECT()
 
 # Declare dependencies
 SEARCH_FOR_BOOST()
-ADD_REQUIRED_DEPENDENCY("hpp-geometry")
+SEARCH_FOR_GEOMETRIC_TOOLS()
 ADD_REQUIRED_DEPENDENCY("roboptim-core")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt")
 
