@@ -83,6 +83,51 @@ namespace roboptim
       radius = src[6];
     }
 
+    /// \brief Compute bounding capsule of a vector of polyhedrons.
+    ///
+    /// Compute axis of capsule segment using least-squares fit. Radius
+    /// is maximum distance from points to axis. Hemispherical caps are
+    /// chosen as close together as possible.
+    ///
+    /// \param polyhedrons vector of polyhedrons that contain the
+    /// points
+    /// \return endPoint1 bounding capsule segment first end point
+    /// \return endPoint2 bounding capsule segment second end point
+    /// \return radius bounding capsule radius
+    inline void
+    computeBoundingCapsulePolyhedron (const polyhedrons_t& polyhedrons,
+				      point_t& endPoint1,
+				      point_t& endPoint2,
+				      value_type& radius)
+    {
+      assert (polyhedrons.size () !=0 && "Empty polyhedron vector.");
+
+      // Retrieve vector of points from polyhedrons.
+      unsigned nbPoints = 0;
+      for (unsigned i = 0; i < polyhedrons.size (); ++i)
+	nbPoints += polyhedrons[i].size ();
+
+      point_t points[nbPoints];
+      unsigned k = 0;
+      for (unsigned i = 0; i < polyhedrons.size (); ++i)
+	{
+	  polyhedron_t polyhedron = polyhedrons[i];
+	  for (unsigned j = 0; j < polyhedron.size (); ++j)
+	    {
+	      points[k] = polyhedron[j];
+	      ++k;
+	    }
+	}
+
+      // Compute bounding capsule of points.
+      Wm5::Capsule3<value_type> capsule = Wm5::ContCapsule (nbPoints, points);
+
+      // Get capsule parameters.
+      endPoint1 = capsule.Segment.P0;
+      endPoint2 = capsule.Segment.P1;
+      radius = capsule.Radius;
+    }
+
   } // end of namespace capsule.
 } // end of namespace roboptim.
 
