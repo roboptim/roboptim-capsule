@@ -20,12 +20,9 @@
 # define ROBOPTIM_CAPSULE_UTIL_HH_
 
 # include <iostream>
+# include <set>
 
 # include <boost/foreach.hpp>
-
-# include <geometric-tools/Wm5Capsule3.h>
-# include <geometric-tools/Wm5ContCapsule3.h>
-# include <geometric-tools/Wm5ConvexHull3.h>
 
 # include <roboptim/capsule/fwd.hh>
 # include <roboptim/capsule/types.hh>

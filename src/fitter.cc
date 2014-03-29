@@ -43,7 +43,7 @@ namespace roboptim
       : polyhedrons_ (polyhedrons)
     {
       argument_t param (7);
-      param.clear ();
+      param.setZero ();
       solutionParam_ = param;
     }
 
@@ -127,7 +127,7 @@ namespace roboptim
 				const argument_t& initParam) throw ()
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
-      
+
       return solutionParam_;
     }
 
@@ -141,7 +141,7 @@ namespace roboptim
       assert (polyhedrons.size () != 0 && "Empty polyhedron vector");
       assert (initParam.size () == 7
 	      && "Incorrect initParam size, expected 7.");
-      
+
       // Define volume function. It is the cost of the optimization
       // problem.
       Volume volume;
@@ -165,7 +165,7 @@ namespace roboptim
 	  for (size_type j = 0; j < polyhedron.size (); ++j)
 	    {
 	      point_t point = polyhedron[j];
-	
+
 	      std::string s = "distance to point ";
 	      std::stringstream name;
 	      name << s << j;

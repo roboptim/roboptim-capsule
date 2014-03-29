@@ -25,8 +25,6 @@
 #ifndef ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 # define ROBOPTIM_CAPSULE_DISTANCE_CAPSULE_POINT_CC_
 
-# include <geometric-tools/Wm5DistPoint3Segment3.h>
-
 # include <roboptim/capsule/distance-capsule-point.hh>
 
 namespace roboptim
@@ -62,7 +60,7 @@ namespace roboptim
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
-      result.clear ();
+      result.setZero ();
 
       // Define capsule axis from argument.
       point_t endPoint1 (argument[0], argument[1], argument[2]);
@@ -70,10 +68,10 @@ namespace roboptim
       segment_t segment (endPoint1, endPoint2);
 
       // Compute distance between segment and point.
-      Wm5::DistPoint3Segment3<value_type> distance (point_, segment);
-      
+      value_type distance = segment.distance (point_);
+
       // Return difference between distance and capsule radius.
-      result[0] = sqrt (distance.GetSquared ()) - argument[6];
+      result[0] = distance - argument[6];
 
       return;
     }
@@ -85,7 +83,7 @@ namespace roboptim
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
-      gradient.clear ();
+      gradient.setZero ();
 
       // Define capsule axis from argument.
       point_t endPoint1 (argument[0], argument[1], argument[2]);
@@ -93,14 +91,12 @@ namespace roboptim
       segment_t segment (endPoint1, endPoint2);
 
       // Compute distance between segment and point.
-      Wm5::DistPoint3Segment3<value_type> distance (point_, segment);
-      value_type d = distance.GetSquared (); 
-      point_t segmentClosest = segment.Center
-	+ distance.GetSegmentParameter () * segment.Direction;
+      value_type d = segment.distance (point_);
+      point_t segmentClosest = segment.projection (point_);
 
       // Compute unit axis between closest points.
       point_t unitPoint = segmentClosest - point_;
-      unitPoint.Normalize ();
+      unitPoint.normalize ();
       vector_t unit (3);
       unit[0] = unitPoint[0];
       unit[1] = unitPoint[1];
@@ -110,14 +106,14 @@ namespace roboptim
       point_t segmentClosestFromEndP1 = segmentClosest - endPoint1;
       point_t endP2FromEndP1 = endPoint2 - endPoint1;
       value_type lambda;
-      if (endP2FromEndP1.Length () > 0)
-	lambda = segmentClosestFromEndP1.Length () / endP2FromEndP1.Length ();
+      if (endP2FromEndP1.norm () > 0)
+	lambda = segmentClosestFromEndP1.norm () / endP2FromEndP1.norm ();
       else
 	lambda = 0.;
 
       // Compute closest point jacobian wrt parameters.
       matrix_t jacobian (3, 7);
-      jacobian.clear ();
+      jacobian.setZero ();
       jacobian(0,0) = 1 - lambda;
       jacobian(1,1) = 1 - lambda;
       jacobian(2,2) = 1 - lambda;
@@ -126,12 +122,12 @@ namespace roboptim
       jacobian(2,5) = lambda;
 
       // Compute capsule-point distance gradient.
-      using namespace boost::numeric::ublas;
-      vector_t segmentDistanceGradient = prod (unit, jacobian);
+      // TODO: double-check this
+      vector_t segmentDistanceGradient = unit.transpose () * jacobian;
 
       // Compute radius gradient.
       vector_t radiusGradient (7);
-      radiusGradient.clear ();
+      radiusGradient.setZero ();
       radiusGradient[6] = 1.;
 
       // Return capsule distance gradient.

@@ -15,19 +15,19 @@ SET(PROJECT_URL "")
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 SET(${PROJECT_NAME}_HEADERS
+  include/roboptim/capsule/distance-capsule-point.hh
   include/roboptim/capsule/fwd.hh
+  include/roboptim/capsule/fitter.hh
   include/roboptim/capsule/types.hh
   include/roboptim/capsule/util.hh
   include/roboptim/capsule/volume.hh
-  include/roboptim/capsule/distance-capsule-point.hh
-  include/roboptim/capsule/fitter.hh
   )
 
 SETUP_PROJECT()
 
 # Declare dependencies
 SEARCH_FOR_BOOST()
-SEARCH_FOR_GEOMETRIC_TOOLS()
+ADD_REQUIRED_DEPENDENCY("eigen3 >= 3.2.0")
 ADD_REQUIRED_DEPENDENCY("roboptim-core")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt")
 
