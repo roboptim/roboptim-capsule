@@ -191,6 +191,18 @@ namespace roboptim
       solver.parameters ()["ipopt.file_print_level"].value = 5;
       solver.parameters ()["ipopt.print_user_options"].value = "yes";
       solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.out";
+      solver.parameters ()["ipopt.tol"].value = 1e-3;
+      solver.parameters ()["ipopt.compl_inf_tol"].value = 1e-4;
+      solver.parameters ()["ipopt.dual_inf_tol"].value = 1e1;
+      solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-4;
+      solver.parameters ()["ipopt.acceptable_iter"].value = 5;
+      solver.parameters ()["ipopt.acceptable_tol"].value = 1e10;
+      solver.parameters ()["ipopt.acceptable_obj_change_tol"].value = 1e2;
+      solver.parameters ()["ipopt.acceptable_compl_inf_tol"].value = 1e-2;
+      solver.parameters ()["ipopt.acceptable_dual_inf_tol"].value = 1e5;
+      solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-2;
+      solver.parameters ()["ipopt.mu_strategy"].value = "adaptive";
+      solver.parameters ()["ipopt.nlp_scaling_method"].value = "gradient-based";
 
       // Solve problem and check if the optimum is correct.
       solver_t::result_t result = solver.minimum ();

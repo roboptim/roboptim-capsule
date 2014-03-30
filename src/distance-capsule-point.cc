@@ -27,6 +27,8 @@
 
 # include <roboptim/capsule/distance-capsule-point.hh>
 
+# include <roboptim/core/finite-difference-gradient.hh>
+
 namespace roboptim
 {
   namespace capsule
@@ -85,6 +87,12 @@ namespace roboptim
 
       gradient.setZero ();
 
+      // TODO: fix gradient computation
+      roboptim::GenericFiniteDifferenceGradient<roboptim::EigenMatrixDense>
+	fdgDistanceFunction (*this, 1e-6);
+      fdgDistanceFunction.gradient (gradient, argument);
+      return;
+
       // Define capsule axis from argument.
       point_t endPoint1 (argument[0], argument[1], argument[2]);
       point_t endPoint2 (argument[3], argument[4], argument[5]);
@@ -94,16 +102,12 @@ namespace roboptim
       point_t segmentClosest = segment.projection (point_);
 
       // Compute unit axis between closest points.
-      point_t unitPoint = segmentClosest - point_;
-      unitPoint.normalize ();
-      vector_t unit (3);
-      unit[0] = unitPoint[0];
-      unit[1] = unitPoint[1];
-      unit[2] = unitPoint[2];
+      vector3_t unit = segmentClosest - point_;
+      unit.normalize ();
 
       // Compute closest point parameter.
       point_t segmentClosestFromEndP1 = segmentClosest - endPoint1;
-      point_t endP2FromEndP1 = endPoint2 - endPoint1;
+      vector3_t endP2FromEndP1 = endPoint2 - endPoint1;
       value_type lambda;
       if (endP2FromEndP1.norm () > 0)
 	lambda = segmentClosestFromEndP1.norm () / endP2FromEndP1.norm ();

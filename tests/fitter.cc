@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE (fitter)
   //
   // To do so, compute initial guess by finding a bounding capsule
   // (not the minimum one).
-  // 
+  //
   // If needed, the convex hull of the polyhedron can be first computed
   // to reduce the number of constraints and accelerate the optimization
   // phase.
