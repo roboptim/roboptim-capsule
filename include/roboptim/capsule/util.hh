@@ -27,11 +27,72 @@
 
 # include <roboptim/capsule/fwd.hh>
 # include <roboptim/capsule/types.hh>
+# include <roboptim/capsule/qhull.hh>
 
 namespace roboptim
 {
   namespace capsule
   {
+
+    /// Creates a convex hull from a set of points.
+    polyhedron_t convexHullFromPoints (const std::vector<point_t>& points)
+    {
+      polyhedron_t convexPolyhedron;
+
+# ifdef HAVE_QHULL
+      int numpoints = static_cast<int> (points.size ());
+      int dim = 3;
+
+      std::vector<value_type> rboxpoints (dim * numpoints);
+      size_t iter = 0;
+
+      for (std::vector<point_t>::const_iterator
+	     point = points.begin (); point != points.end (); ++point)
+	{
+	  rboxpoints[iter++] = (*point)[0];
+	  rboxpoints[iter++] = (*point)[1];
+	  rboxpoints[iter++] = (*point)[2];
+	}
+
+      // Compute the convex hull with qhull
+      char flags[25];
+      sprintf (flags, "qhull Qc Qt Qi");
+      int exitcode = qh_new_qhull (dim, numpoints,
+				   rboxpoints.data (), 0,
+				   flags, NULL, NULL);
+
+      int num_qhull_vertices = qh num_vertices;
+      assert (num_qhull_vertices > 0
+	      && "Qhull computation failed (empty vector).");
+
+      if (exitcode != 0 || num_qhull_vertices == 0)
+	{
+	  // Return empty polyhedron
+	  return convexPolyhedron;
+	}
+
+      // Get the list of points
+      convexPolyhedron.resize (num_qhull_vertices);
+      vertexT* vertex = qh vertex_list;
+
+      FORALLvertices {
+	// qh_pointid (vertex->point) is the point id of the vertex
+	int id = qh_pointid (vertex->point);
+	// vertex->point is the coordinates of the vertex
+	convexPolyhedron[id] = point_t (vertex->point[0],
+					vertex->point[1],
+					vertex->point[2]);
+      }
+
+      qh_freeqhull (!qh_ALL);
+# else
+      std::cerr << "Qhull not found, cannot compute the convex hull."
+		<< std::endl;
+# endif //! HAVE_QHULL
+      // Return the convex hull as a polyhedron
+      return convexPolyhedron;
+    }
+
 
     /// \brief Structure containing Capsule data (start point, end point and
     // radius).
@@ -125,12 +186,15 @@ namespace roboptim
     /// could be shortened to have a better fit.
     inline Capsule capsuleFromPoints (const std::vector<point_t>& points)
     {
+      assert (points.size () > 0
+              && "Cannot compute capsule for empty polyhedron.");
+
       // Create the covariance matrix for PCA
       Eigen::Matrix3d covariance = covarianceMatrix (points);
 
       // Compute eigenvectors and eigenvalues
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es;
-      es.compute (covariance,true);
+      es.compute (covariance,Eigen::ComputeEigenvectors);
 
       Eigen::Matrix3d eigenVectors = es.eigenvectors ();
       Eigen::Matrix3d eigenValues = es.eigenvalues ().asDiagonal ();
@@ -169,9 +233,10 @@ namespace roboptim
 
       // Find the most extreme points along the largest spread direction.
       // Those points will help to find the length of the capsule.
-      int iminLargestSpread, imaxLargestSpread;
+      int iminLargestSpread = 0;
+      int imaxLargestSpread = 0;
       extremePointsAlongDirection (dirLargestSpread, points,
-				   iminLargestSpread, imaxLargestSpread);
+                                   iminLargestSpread, imaxLargestSpread);
       point_t minptLargestSpread = points[iminLargestSpread];
       point_t maxptLargestSpread = points[imaxLargestSpread];
 
@@ -363,7 +428,9 @@ namespace roboptim
       // Retrieve vector of points from polyhedrons.
       size_type nbPoints = 0;
       BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
-	nbPoints += polyhedron.size ();
+	{
+          nbPoints += polyhedron.size ();
+	}
 
       std::vector<point_t> points (nbPoints);
       size_type k = 0;
@@ -371,8 +438,7 @@ namespace roboptim
 	{
 	  BOOST_FOREACH (point_t point, polyhedron)
 	    {
-	      points[k] = point;
-	      ++k;
+	      points[k++] = point;
 	    }
 	}
 
@@ -408,29 +474,14 @@ namespace roboptim
       polyhedron_t polyhedron;
       convertPolyhedronVectorToPolyhedron (polyhedron, polyhedrons);
 
-      point_t points[polyhedron.size ()];
-      for (size_type i = 0; i < polyhedron.size (); ++i)
-	points[i] = polyhedron[i];
-
-      Wm5::ConvexHull3<value_type> convexHull
-	(polyhedron.size (), points, 1e-8, false, Wm5::Query::QT_INT64);
+      assert (polyhedron.size() > 0
+	      && "Polyhedron merging failed.");
 
       // Build convex polyhedron that contains unique points.
-      polyhedron_t convexPolyhedron;
-      std::set<int> addedVertices;
-      for (size_type i = 0; i < convexHull.GetNumSimplices (); ++i)
-	{
-	  for (size_type j = 0; j < 3; ++j)
-	    {
-	      size_type index = convexHull.GetIndices ()[3*i+j];
-	      if (addedVertices.find (index) == addedVertices.end ())
-		{
-		  point_t p (points[index]);
-		  convexPolyhedron.push_back (p);
-		  addedVertices.insert (index);
-		}
-	    }
-	}
+      polyhedron_t convexPolyhedron = convexHullFromPoints (polyhedron);
+
+      assert (convexPolyhedron.size() > 0
+	      && "Convex polyhedron computation failed.");
 
       convexPolyhedrons.push_back (convexPolyhedron);
     }
