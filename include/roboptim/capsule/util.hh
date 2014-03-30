@@ -119,13 +119,13 @@ namespace roboptim
       value_type e00, e11, e22, e01, e02, e12;
 
       // compute the center of mass of the points
-      for (size_type i = 0; i < points.size (); ++i)
+      for (size_t i = 0; i < points.size (); ++i)
 	c += points[i];
       c *= oon;
 
       // compute covariance elements
       e00 = e11 = e22 = e01 = e02 = e12 = 0.0;
-      for (size_type i = 0; i < points.size (); ++i)
+      for (size_t i = 0; i < points.size (); ++i)
         {
 	  // translate points so center of mass is at origin
 	  point_t p = points[i] - c;
@@ -161,19 +161,19 @@ namespace roboptim
       double minproj = std::numeric_limits<double>::max ();
       double maxproj = -minproj;
 
-      for (int i = 0; i < points.size(); ++i)
+      for (size_t i = 0; i < points.size(); ++i)
         {
 	  // Project vector from origin to point onto direction vector
 	  double proj = points[i].dot (dir);
 	  // Keep track of least distant point along direction vector
 	  if (proj < minproj) {
 	    minproj = proj;
-	    imin = i;
+	    imin = static_cast<int> (i);
 	  }
 	  // Keep track of most distant point along direction vector
 	  if (proj > maxproj) {
 	    maxproj = proj;
-	    imax = i;
+	    imax = static_cast<int> (i);
 	  }
         }
     }
@@ -245,15 +245,15 @@ namespace roboptim
       // However, a better point could be found with a more complicated
       // algorithm, thus reducing the volume of the capsule.
       point_t average;
-      for (size_type i = 0; i < points.size (); ++i)
+      for (size_t i = 0; i < points.size (); ++i)
         {
 	  average += points[i];
         }
-      average /= points.size ();
+      average /= static_cast<value_type> (points.size ());
 
       // Find the correct radius for the capsule.
       value_type radius = 0;
-      for (size_type i = 0; i < points.size (); ++i)
+      for (size_t i = 0; i < points.size (); ++i)
         {
 	  value_type dist = distancePointToLine
 	    (points[i], average, dirLargestSpread);

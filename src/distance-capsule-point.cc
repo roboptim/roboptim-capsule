@@ -79,7 +79,7 @@ namespace roboptim
     void DistanceCapsulePoint::
     impl_gradient (gradient_t& gradient,
 		   const argument_t& argument,
-		   size_type functionId) const throw ()
+		   size_type /*functionId*/) const throw ()
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
@@ -90,8 +90,7 @@ namespace roboptim
       point_t endPoint2 (argument[3], argument[4], argument[5]);
       segment_t segment (endPoint1, endPoint2);
 
-      // Compute distance between segment and point.
-      value_type d = segment.distance (point_);
+      // Compute projection of point on between segment.
       point_t segmentClosest = segment.projection (point_);
 
       // Compute unit axis between closest points.

@@ -162,7 +162,7 @@ namespace roboptim
       // problem.
       BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	{
-	  for (size_type j = 0; j < polyhedron.size (); ++j)
+	  for (size_t j = 0; j < polyhedron.size (); ++j)
 	    {
 	      point_t point = polyhedron[j];
 
