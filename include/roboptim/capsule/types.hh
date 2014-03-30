@@ -46,6 +46,7 @@ namespace roboptim
 
     /// \brief Define geometry types.
     typedef Eigen::Matrix<value_type,3,1>         point_t;
+    typedef Eigen::Matrix<value_type,3,1>         vector3_t;
     typedef std::vector<point_t>                  polyhedron_t;
     typedef std::vector<polyhedron_t>             polyhedrons_t;
     typedef Eigen::ParametrizedLine<value_type,3> segment_t;

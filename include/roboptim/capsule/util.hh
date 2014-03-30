@@ -21,6 +21,7 @@
 
 # include <iostream>
 # include <set>
+# include <limits>
 
 # include <boost/foreach.hpp>
 
@@ -31,6 +32,241 @@ namespace roboptim
 {
   namespace capsule
   {
+
+    /// \brief Structure containing Capsule data (start point, end point and
+    // radius).
+    struct Capsule
+    {
+      point_t P0, P1;
+      value_type radius;
+    };
+
+    /// \brief Distance from a point to a line described as a point and a
+    // direction.
+    inline value_type distancePointToLine (const point_t& point,
+                                           const point_t& linePoint,
+                                           const vector3_t& dir)
+    {
+      return (dir.cross (linePoint - point)).norm () / dir.norm ();
+    }
+
+    /// \brief Compute the covariance matrix of a set of points.
+    inline Eigen::Matrix3d covarianceMatrix (const std::vector<point_t>& points)
+    {
+      value_type oon = 1.0 / (value_type)points.size();
+      point_t c(0., 0., 0.);
+      value_type e00, e11, e22, e01, e02, e12;
+
+      // compute the center of mass of the points
+      for (size_type i = 0; i < points.size (); ++i)
+	c += points[i];
+      c *= oon;
+
+      // compute covariance elements
+      e00 = e11 = e22 = e01 = e02 = e12 = 0.0;
+      for (size_type i = 0; i < points.size (); ++i)
+        {
+	  // translate points so center of mass is at origin
+	  point_t p = points[i] - c;
+	  // compute covariance of translated points
+	  e00 += p[0] * p[0];
+	  e11 += p[1] * p[1];
+	  e22 += p[2] * p[2];
+	  e01 += p[0] * p[1];
+	  e02 += p[0] * p[2];
+	  e12 += p[1] * p[2];
+        }
+
+      // fill in the covariance matrix elements
+      Eigen::Matrix3d cov;
+
+      cov (0,0) = e00 * oon;
+      cov (1,1) = e11 * oon;
+      cov (2,2) = e22 * oon;
+      cov (0,1) = cov (1,0) = e01 * oon;
+      cov (0,2) = cov (2,0) = e02 * oon;
+      cov (1,2) = cov (2,1) = e12 * oon;
+
+      return cov;
+    }
+
+
+    // Returns indices imin and imax into pt[] array of the least and
+    // most, respectively, distant points along the direction dir
+    inline void extremePointsAlongDirection (vector3_t dir,
+                                             const std::vector<point_t>& points,
+                                             int& imin, int& imax)
+    {
+      double minproj = std::numeric_limits<double>::max ();
+      double maxproj = -minproj;
+
+      for (int i = 0; i < points.size(); ++i)
+        {
+	  // Project vector from origin to point onto direction vector
+	  double proj = points[i].dot (dir);
+	  // Keep track of least distant point along direction vector
+	  if (proj < minproj) {
+	    minproj = proj;
+	    imin = i;
+	  }
+	  // Keep track of most distant point along direction vector
+	  if (proj > maxproj) {
+	    maxproj = proj;
+	    imax = i;
+	  }
+        }
+    }
+
+    /// Computes a capsule from a set of points.
+    /// The algorithm currently used relies on the search of the largest spread
+    /// direction (PCA).
+    /// TODO: Optimize computation speed.
+    /// Spheres on both ends do not contain any point yet, cylinder length
+    /// could be shortened to have a better fit.
+    inline Capsule capsuleFromPoints (const std::vector<point_t>& points)
+    {
+      // Create the covariance matrix for PCA
+      Eigen::Matrix3d covariance = covarianceMatrix (points);
+
+      // Compute eigenvectors and eigenvalues
+      Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es;
+      es.compute (covariance,true);
+
+      Eigen::Matrix3d eigenVectors = es.eigenvectors ();
+      Eigen::Matrix3d eigenValues = es.eigenvalues ().asDiagonal ();
+
+      // Find the largest eigenvalue and the corresponding direction
+      // (largest spread)
+      unsigned maxc, minc;
+      maxc = minc = 0;
+      value_type absev, maxev, minev;
+      maxev = minev = std::fabs (eigenValues (0,0));
+
+      if ((absev = std::fabs (eigenValues (1,1))) > maxev)
+        {
+	  maxc = 1;
+	  maxev = absev;
+        }
+      else
+        {
+	  minc = 1;
+	  minev = absev;
+        }
+
+      if ((absev = std::fabs (eigenValues (2,2))) > maxev)
+        {
+	  maxc = 2;
+	  maxev = absev;
+        }
+      else if (minev > absev)
+        {
+	  minc = 2;
+	  minev = absev;
+        }
+
+      vector3_t dirLargestSpread = eigenVectors.col (maxc);
+      dirLargestSpread.normalize ();
+
+      // Find the most extreme points along the largest spread direction.
+      // Those points will help to find the length of the capsule.
+      int iminLargestSpread, imaxLargestSpread;
+      extremePointsAlongDirection (dirLargestSpread, points,
+				   iminLargestSpread, imaxLargestSpread);
+      point_t minptLargestSpread = points[iminLargestSpread];
+      point_t maxptLargestSpread = points[imaxLargestSpread];
+
+      // Compute the start point
+      // The cylinder axis will be (average point, largest spread direction).
+      // However, a better point could be found with a more complicated
+      // algorithm, thus reducing the volume of the capsule.
+      point_t average;
+      for (size_type i = 0; i < points.size (); ++i)
+        {
+	  average += points[i];
+        }
+      average /= points.size ();
+
+      // Find the correct radius for the capsule.
+      value_type radius = 0;
+      for (size_type i = 0; i < points.size (); ++i)
+        {
+	  value_type dist = distancePointToLine
+	    (points[i], average, dirLargestSpread);
+	  if (dist > radius) radius = dist;
+        }
+
+      // Find the correct length for the capsule
+      value_type length = (maxptLargestSpread - minptLargestSpread).norm ();
+
+      // Length used to find the correct center position on the direction axis
+      value_type maxLengthFromAverage
+	= std::fabs((maxptLargestSpread - average).dot (dirLargestSpread));
+      point_t center = average + (maxLengthFromAverage - 0.5 * length)
+	* dirLargestSpread;
+
+      // Optimization of the volume
+      // - We determine the points located at
+      //   both extremities (+/-)(0.5 * length - radius)
+      // - For all of those points, we look for the start/endpoint position
+      //   that will minimize the capsule volume.
+      std::vector<point_t> nearStartPoints;
+      std::vector<point_t> nearEndPoints;
+      point_t start = center - (0.5 * length - radius) * dirLargestSpread;
+      point_t end = center + (0.5 * length - radius) * dirLargestSpread;
+
+      for(size_type i = 0; i < points.size (); ++i)
+        {
+	  // if located near the start boundary
+	  value_type dirDist = dirLargestSpread.dot (points[i] - center);
+	  if (-dirDist >  0.5 * length - radius)
+	    nearStartPoints.push_back(points[i]);
+	  // else if located near the end boundary
+	  else if (dirDist > 0.5 * length - radius)
+	    nearEndPoints.push_back(points[i]);
+        }
+
+      // we move the position of the start point to include all points in its
+      // vicinity
+      for (size_type i = 0; i < nearStartPoints.size (); ++i)
+        {
+	  if ((nearStartPoints[i] - start).norm () > radius)
+            {
+	      // using pythagore theorem
+	      value_type h = distancePointToLine (nearStartPoints[i],
+						  center, dirLargestSpread);
+	      value_type l = (nearStartPoints[i] - start)
+		.dot (-dirLargestSpread);
+	      if (l - sqrt(radius * radius - h * h) > 0)
+		start -= (l - sqrt(radius * radius - h * h))
+		  * dirLargestSpread;
+            }
+        }
+
+      // we move the position of the end point to include all points in its
+      // vicinity
+      for (size_type i = 0; i < nearEndPoints.size (); ++i)
+        {
+	  if ((nearEndPoints[i] - end).norm () > radius)
+            {
+	      // using pythagore theorem
+	      value_type l = (nearEndPoints[i] - end).dot (dirLargestSpread);
+	      value_type h = distancePointToLine (nearEndPoints[i],
+						  center, dirLargestSpread);
+	      if (l - std::sqrt (radius * radius - h * h) > 0)
+		end += (l - std::sqrt (radius * radius - h * h))
+		  * dirLargestSpread;
+            }
+        }
+
+      Capsule capsule;
+      capsule.P0 = start;
+      capsule.P1 = end;
+      capsule.radius = radius;
+
+      return capsule;
+    }
+
+
     /// \brief Convert Capsule parameters to RobOptim solver
     /// parameters vector.
     ///
@@ -129,7 +365,7 @@ namespace roboptim
       BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	nbPoints += polyhedron.size ();
 
-      point_t points[nbPoints];
+      std::vector<point_t> points (nbPoints);
       size_type k = 0;
       BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	{
@@ -141,12 +377,12 @@ namespace roboptim
 	}
 
       // Compute bounding capsule of points.
-      Wm5::Capsule3<value_type> capsule = Wm5::ContCapsule (nbPoints, points);
+      Capsule capsule = capsuleFromPoints (points);
 
       // Get capsule parameters.
-      endPoint1 = capsule.Segment.P0;
-      endPoint2 = capsule.Segment.P1;
-      radius = capsule.Radius;
+      endPoint1 = capsule.P0;
+      endPoint2 = capsule.P1;
+      radius = capsule.radius;
     }
 
     /// \brief Compute the convex polyhedron over a vector of
