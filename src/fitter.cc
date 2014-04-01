@@ -65,7 +65,7 @@ namespace roboptim
       polyhedrons_ = polyhedrons;
     }
 
-    const value_type Fitter::
+    value_type Fitter::
     initVolume () const throw ()
     {
       assert (initVolume_ > 0
@@ -74,7 +74,7 @@ namespace roboptim
       return initVolume_;
     }
 
-    const value_type Fitter::
+    value_type Fitter::
     solutionVolume () const throw ()
     {
       assert (solutionVolume_ > 0
@@ -171,7 +171,7 @@ namespace roboptim
 	      name << s << j;
 
 	      // Add distance constraint. Distance must always be negative
-	      // (point remains inside capsule when as it shrinks).
+	      // (points remain inside the capsule as it shrinks).
 	      boost::shared_ptr<DistanceCapsulePoint>
 		distance (new DistanceCapsulePoint (point, name.str ()));
 	      Function::interval_t distanceInterval
@@ -192,15 +192,15 @@ namespace roboptim
       solver.parameters ()["ipopt.print_user_options"].value = "yes";
       solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.out";
       solver.parameters ()["ipopt.tol"].value = 1e-3;
-      solver.parameters ()["ipopt.compl_inf_tol"].value = 1e-4;
-      solver.parameters ()["ipopt.dual_inf_tol"].value = 1e1;
-      solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-4;
-      solver.parameters ()["ipopt.acceptable_iter"].value = 5;
-      solver.parameters ()["ipopt.acceptable_tol"].value = 1e10;
-      solver.parameters ()["ipopt.acceptable_obj_change_tol"].value = 1e2;
-      solver.parameters ()["ipopt.acceptable_compl_inf_tol"].value = 1e-2;
-      solver.parameters ()["ipopt.acceptable_dual_inf_tol"].value = 1e5;
-      solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-2;
+      solver.parameters ()["ipopt.compl_inf_tol"].value = 1e-6;
+      solver.parameters ()["ipopt.dual_inf_tol"].value = 1e0;
+      solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-6;
+      solver.parameters ()["ipopt.acceptable_iter"].value = 15;
+      solver.parameters ()["ipopt.acceptable_tol"].value = 1e1;
+      solver.parameters ()["ipopt.acceptable_obj_change_tol"].value = 1e-3;
+      solver.parameters ()["ipopt.acceptable_compl_inf_tol"].value = 1e-3;
+      solver.parameters ()["ipopt.acceptable_dual_inf_tol"].value = 1e1;
+      solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-5;
       solver.parameters ()["ipopt.mu_strategy"].value = "adaptive";
       solver.parameters ()["ipopt.nlp_scaling_method"].value = "gradient-based";
 
@@ -228,7 +228,7 @@ namespace roboptim
 	case solver_t::SOLVER_VALUE_WARNINGS:
 	  {
 	    // Display the result.
-	    std::cout << "A solution has been found (minor problems occurred)"
+	    std::cout << "A solution has been found (with warnings)" << std::endl
 		      << solver.getMinimum<ResultWithWarnings> ()
 		      << std::endl;
 	    solutionParam = solver.getMinimum<ResultWithWarnings> ().x;

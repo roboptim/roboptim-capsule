@@ -60,10 +60,11 @@ BOOST_AUTO_TEST_CASE (fitter)
 
   // Create fitter. It is used to find the best fitting capsule on the
   // polyhedron vector.
-  Fitter fitter (convexPolyhedrons);
+  Fitter fitter_cube (convexPolyhedrons);
 
-  point_t endPoint1, endPoint2;
-  value_type radius;
+  point_t endPoint1 = point_t (0., 0., 0.);
+  point_t endPoint2 = point_t (0., 0., 0.);
+  value_type radius = 0.;
   computeBoundingCapsulePolyhedron (convexPolyhedrons,
 				    endPoint1, endPoint2, radius);
 
@@ -71,7 +72,22 @@ BOOST_AUTO_TEST_CASE (fitter)
   convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
 
   // Compute best fitting capsule.
-  fitter.computeBestFitCapsule (initParam);
-  argument_t solutionParam = fitter.solutionParam ();
-  std::cout << fitter << std::endl;
+  fitter_cube.computeBestFitCapsule (initParam);
+  argument_t solutionParam = fitter_cube.solutionParam ();
+  std::cout << fitter_cube << std::endl;
+
+  BOOST_CHECK_CLOSE(solutionParam[6], std::sqrt(2.)/2., 1e-3);
+
+  polyhedron.clear ();
+  convexPolyhedrons.clear ();
+  polyhedron.push_back (point_t (1., halfLength, halfLength));
+  polyhedron.push_back (point_t (1., -halfLength, halfLength));
+  polyhedrons.push_back (polyhedron);
+  computeConvexPolyhedron (polyhedrons, convexPolyhedrons);
+
+  Fitter fitter_rect (convexPolyhedrons);
+  computeBoundingCapsulePolyhedron (convexPolyhedrons,
+				    endPoint1, endPoint2, radius);
+  fitter_rect.computeBestFitCapsule (initParam);
+  std::cout << fitter_rect << std::endl;
 }

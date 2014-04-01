@@ -4,6 +4,7 @@ ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
   distance-capsule-point.cc
   fitter.cc
+  util.cc
   volume.cc
   )
 
