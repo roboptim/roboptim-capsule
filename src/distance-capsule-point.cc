@@ -29,6 +29,8 @@
 
 # include <roboptim/core/finite-difference-gradient.hh>
 
+# include "roboptim/capsule/util.hh"
+
 namespace roboptim
 {
   namespace capsule
@@ -67,16 +69,14 @@ namespace roboptim
       // Define capsule axis from argument.
       point_t endPoint1 (argument[0], argument[1], argument[2]);
       point_t endPoint2 (argument[3], argument[4], argument[5]);
-      segment_t segment (endPoint1, endPoint2);
 
       // Compute distance between segment and point.
-      value_type distance = segment.distance (point_);
+      value_type distance = distancePointToSegment (point_, endPoint1, endPoint2);
 
       // Return difference between distance and capsule radius.
       result[0] = distance - argument[6];
-
-      return;
     }
+
 
     void DistanceCapsulePoint::
     impl_gradient (gradient_t& gradient,
@@ -96,10 +96,11 @@ namespace roboptim
       // Define capsule axis from argument.
       point_t endPoint1 (argument[0], argument[1], argument[2]);
       point_t endPoint2 (argument[3], argument[4], argument[5]);
-      segment_t segment (endPoint1, endPoint2);
 
-      // Compute projection of point on between segment.
-      point_t segmentClosest = segment.projection (point_);
+      // Compute projection of point on segment.
+      point_t segmentClosest = projectionOnSegment (point_,
+                                                    endPoint1,
+                                                    endPoint2);
 
       // Compute unit axis between closest points.
       vector3_t unit = segmentClosest - point_;

@@ -32,7 +32,6 @@ namespace roboptim
   namespace capsule
   {
 
-    /// Creates a convex hull from a set of points.
     polyhedron_t convexHullFromPoints (const std::vector<point_t>& points)
     {
       polyhedron_t convexPolyhedron;
@@ -77,8 +76,8 @@ namespace roboptim
 	int id = qh_pointid (vertex->point);
 	// vertex->point is the coordinates of the vertex
 	convexPolyhedron.push_back(point_t (vertex->point[0],
-					vertex->point[1],
-					vertex->point[2]));
+					    vertex->point[1],
+					    vertex->point[2]));
       }
 
       // TODO: only call this once
@@ -91,8 +90,37 @@ namespace roboptim
       return convexPolyhedron;
     }
 
-    /// \brief Distance from a point to a line described as a point and a
-    // direction.
+
+    value_type distancePointToSegment (const point_t& p,
+                                       const point_t& a,
+                                       const point_t& b)
+    {
+      value_type ab_norm = (b-a).norm ();
+
+      // If the segment is a point, i.e. a = b
+      if (ab_norm < 1e-6)
+	return (a-p).norm ();
+
+      return ((b-a).cross (a-p)).norm ()/(b-a).norm ();
+    }
+
+
+    point_t projectionOnSegment (const point_t& p,
+                                 const point_t& a,
+                                 const point_t& b)
+    {
+      value_type sq_ab_norm = (b-a).squaredNorm ();
+
+      // If the segment is a point, i.e. a = b
+      if (sq_ab_norm < 1e-12)
+	return a;
+
+      value_type alpha = -((a-p).dot (b-a))/sq_ab_norm;
+
+      return a + alpha * (b-a);
+    }
+
+
     value_type distancePointToLine (const point_t& point,
                                     const point_t& linePoint,
                                     const vector3_t& dir)
@@ -101,7 +129,7 @@ namespace roboptim
       return (dir.cross (linePoint - point)).norm () / dir.norm ();
     }
 
-    /// \brief Compute the covariance matrix of a set of points.
+
     Eigen::Matrix3d covarianceMatrix (const std::vector<point_t>& points)
     {
       value_type oon = 1.0 / (value_type)points.size();
@@ -145,8 +173,8 @@ namespace roboptim
     // Returns indices imin and imax into pt[] array of the least and
     // most, respectively, distant points along the direction dir
     void extremePointsAlongDirection (vector3_t dir,
-                                             const std::vector<point_t>& points,
-                                             int& imin, int& imax)
+				      const std::vector<point_t>& points,
+				      int& imin, int& imax)
     {
       double minproj = std::numeric_limits<double>::max ();
       double maxproj = -minproj;
@@ -168,12 +196,7 @@ namespace roboptim
         }
     }
 
-    /// Computes a capsule from a set of points.
-    /// The algorithm currently used relies on the search of the largest spread
-    /// direction (PCA).
-    /// TODO: Optimize computation speed.
-    /// Spheres on both ends do not contain any point yet, cylinder length
-    /// could be shortened to have a better fit.
+
     Capsule capsuleFromPoints (const std::vector<point_t>& points)
     {
       assert (points.size () > 0
@@ -250,7 +273,7 @@ namespace roboptim
 	  if (dist > radius) radius = dist;
         }
 
-      // Find the correct length for the capsule
+      // Find the correct length for the capsule (cylinder part)
       value_type length = (maxptLargestSpread - minptLargestSpread).norm ();
 
       // Length used to find the correct center position on the direction axis
@@ -322,19 +345,10 @@ namespace roboptim
     }
 
 
-    /// \brief Convert Capsule parameters to RobOptim solver
-    /// parameters vector.
-    ///
-    /// \param endPoint1 capsule axis first end point
-    /// \param endPoint2 capsule axis second end point
-    /// \param radius capsule radius
-    /// \return dst parameters vector containing, in this
-    /// order, the capsule axis first end point coordinates, the
-    /// capsule axis second end point coordinates and the radius.
     void convertCapsuleToSolverParam (argument_t& dst,
-					     const point_t& endPoint1,
-					     const point_t& endPoint2,
-					     const value_type& radius)
+				      const point_t& endPoint1,
+				      const point_t& endPoint2,
+				      const value_type& radius)
     {
       dst.resize (7);
 
@@ -347,19 +361,11 @@ namespace roboptim
       dst[6] = radius;
     }
 
-    /// \brief Convert RobOptim solver parameters vector to Capsule
-    /// parameters.
-    ///
-    /// \param src parameters vector containing, in this
-    /// order, the capsule axis first end point coordinates, the
-    /// capsule axis second end point coordinates and the radius.
-    /// \return endPoint1 capsule axis first end point
-    /// \return endPoint2 capsule axis second end point
-    /// \return radius capsule radius
+
     void convertSolverParamToCapsule (point_t& endPoint1,
-					     point_t& endPoint2,
-					     value_type& radius,
-					     const argument_t src)
+				      point_t& endPoint2,
+				      value_type& radius,
+				      const argument_t src)
     {
       assert (src.size () == 7 && "Incorrect src size, expected 7.");
       assert (src[6] > 0
@@ -374,14 +380,7 @@ namespace roboptim
       radius = src[6];
     }
 
-    /// \brief Convert a polyhedron vector to a single polyhedron.
-    ///
-    /// Result polyhedron is the union of all polyhedrons.
-    ///
-    /// \param polyhedrons polyhedron vector containing all
-    /// polyhedrons.
-    ///
-    /// \return polyhedron union polyhedron
+
     void
     convertPolyhedronVectorToPolyhedron (polyhedron_t& polyhedron,
 					 const polyhedrons_t& polyhedrons)
@@ -396,17 +395,7 @@ namespace roboptim
 	}
     }
 
-    /// \brief Compute bounding capsule of a vector of polyhedrons.
-    ///
-    /// Compute axis of capsule segment using least-squares fit. Radius
-    /// is maximum distance from points to axis. Hemispherical caps are
-    /// chosen as close together as possible.
-    ///
-    /// \param polyhedrons vector of polyhedrons that contain the
-    /// points
-    /// \return endPoint1 bounding capsule segment first end point
-    /// \return endPoint2 bounding capsule segment second end point
-    /// \return radius bounding capsule radius
+
     void
     computeBoundingCapsulePolyhedron (const polyhedrons_t& polyhedrons,
 				      point_t& endPoint1,
@@ -441,18 +430,7 @@ namespace roboptim
       radius = capsule.radius;
     }
 
-    /// \brief Compute the convex polyhedron over a vector of
-    /// polyhedrons.
-    ///
-    /// Compute the polygon representing the convex hull of the union
-    /// of all polyhedrons in a vector, and store it in a one-element
-    /// vector.
-    ///
-    /// \param polyhedrons vector of polyhedrons that contain the
-    /// points
-    ///
-    /// \return convexPolyhedron vector of polyhedrons containing one
-    /// element, i.e. the convex hull.
+
     void
     computeConvexPolyhedron (const polyhedrons_t& polyhedrons,
 			     polyhedrons_t& convexPolyhedrons)

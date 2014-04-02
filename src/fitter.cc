@@ -164,7 +164,7 @@ namespace roboptim
 	{
 	  for (size_t j = 0; j < polyhedron.size (); ++j)
 	    {
-	      point_t point = polyhedron[j];
+	      const point_t& point = polyhedron[j];
 
 	      std::string s = "distance to point ";
 	      std::stringstream name;

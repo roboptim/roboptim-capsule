@@ -39,18 +39,16 @@ namespace roboptim
 
     /// \brief Import solver type.
     typedef roboptim::Solver<
-              roboptim::DifferentiableFunction,
-              boost::mpl::vector<
-                roboptim::LinearFunction,
-                roboptim::DifferentiableFunction> > solver_t;
+      roboptim::DifferentiableFunction,
+      boost::mpl::vector<
+	roboptim::LinearFunction,
+	roboptim::DifferentiableFunction> > solver_t;
 
     /// \brief Define geometry types.
     typedef Eigen::Matrix<value_type,3,1>         point_t;
     typedef Eigen::Matrix<value_type,3,1>         vector3_t;
     typedef std::vector<point_t>                  polyhedron_t;
     typedef std::vector<polyhedron_t>             polyhedrons_t;
-    typedef Eigen::ParametrizedLine<value_type,3> segment_t;
-
   } // end of namespace capsule.
 } // end of namespace roboptim.
 

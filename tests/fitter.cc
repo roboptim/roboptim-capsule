@@ -23,6 +23,13 @@
 #include <roboptim/capsule/util.hh>
 #include <roboptim/capsule/fitter.hh>
 
+#define BOOST_CHECK_SMALL_OR_CLOSE(EXP, OBS, TOL) \
+    if (std::fabs (EXP) < TOL) { \
+        BOOST_CHECK_SMALL(OBS, TOL); \
+    } else { \
+        BOOST_CHECK_CLOSE(EXP, OBS, TOL); \
+    }
+
 using boost::test_tools::output_test_stream;
 
 BOOST_AUTO_TEST_CASE (fitter)
@@ -76,18 +83,32 @@ BOOST_AUTO_TEST_CASE (fitter)
   argument_t solutionParam = fitter_cube.solutionParam ();
   std::cout << fitter_cube << std::endl;
 
-  BOOST_CHECK_CLOSE(solutionParam[6], std::sqrt(2.)/2., 1e-3);
+  double epsilon = 1e-3;
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[0], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[1], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[2], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[3], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[4], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[5], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[6], std::sqrt(3. * 0.5 * 0.5), epsilon);
 
-  polyhedron.clear ();
+  polyhedrons.clear ();
   convexPolyhedrons.clear ();
-  polyhedron.push_back (point_t (1., halfLength, halfLength));
-  polyhedron.push_back (point_t (1., -halfLength, halfLength));
+  polyhedron[0][0] -= halfLength;
+  polyhedron[1][0] -= halfLength;
+  polyhedron[2][0] -= halfLength;
+  polyhedron[3][0] -= halfLength;
+  polyhedron[4][0] += halfLength;
+  polyhedron[5][0] += halfLength;
+  polyhedron[6][0] += halfLength;
+  polyhedron[7][0] += halfLength;
   polyhedrons.push_back (polyhedron);
   computeConvexPolyhedron (polyhedrons, convexPolyhedrons);
 
   Fitter fitter_rect (convexPolyhedrons);
   computeBoundingCapsulePolyhedron (convexPolyhedrons,
 				    endPoint1, endPoint2, radius);
+  convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
   fitter_rect.computeBestFitCapsule (initParam);
   std::cout << fitter_rect << std::endl;
 }

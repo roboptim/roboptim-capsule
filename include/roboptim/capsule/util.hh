@@ -45,11 +45,33 @@ namespace roboptim
       value_type radius;
 
       Capsule ()
-      : P0 (0., 0., 0.),
-        P1 (0., 0., 0.),
-        radius (0.)
+	: P0 (0., 0., 0.),
+	  P1 (0., 0., 0.),
+	  radius (0.)
       {}
     };
+
+    /// \brief Compute the distance from point p to segment [a,b].
+    ///
+    /// \param p point.
+    /// \param a start point of segment.
+    /// \param b end point of segment.
+    ///
+    /// \return distance from p to the segment.
+    value_type distancePointToSegment (const point_t& p,
+                                       const point_t& a,
+                                       const point_t& b);
+
+    /// \brief Compute the project of point p on segment [a,b].
+    ///
+    /// \param p point.
+    /// \param a start point of segment.
+    /// \param b end point of segment.
+    ///
+    /// \return projection of p on [a,b].
+    point_t projectionOnSegment (const point_t& p,
+                                 const point_t& a,
+                                 const point_t& b);
 
     /// \brief Distance from a point to a line described as a point and a
     // direction.
@@ -84,9 +106,9 @@ namespace roboptim
     /// order, the capsule axis first end point coordinates, the
     /// capsule axis second end point coordinates and the radius.
     void convertCapsuleToSolverParam (argument_t& dst,
-					     const point_t& endPoint1,
-					     const point_t& endPoint2,
-					     const value_type& radius);
+				      const point_t& endPoint1,
+				      const point_t& endPoint2,
+				      const value_type& radius);
 
     /// \brief Convert RobOptim solver parameters vector to Capsule
     /// parameters.
@@ -98,9 +120,9 @@ namespace roboptim
     /// \return endPoint2 capsule axis second end point
     /// \return radius capsule radius
     void convertSolverParamToCapsule (point_t& endPoint1,
-					     point_t& endPoint2,
-					     value_type& radius,
-					     const argument_t src);
+				      point_t& endPoint2,
+				      value_type& radius,
+				      const argument_t src);
 
     /// \brief Convert a polyhedron vector to a single polyhedron.
     ///
