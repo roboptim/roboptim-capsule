@@ -95,13 +95,12 @@ namespace roboptim
                                        const point_t& a,
                                        const point_t& b)
     {
-      value_type ab_norm = (b-a).norm ();
+      value_type d_ab = (b-a).norm ();
 
       // If the segment is a point, i.e. a = b
-      if (ab_norm < 1e-6)
-	return (a-p).norm ();
+      if (d_ab < 1e-6) return (a-p).norm ();
 
-      return ((b-a).cross (a-p)).norm ()/(b-a).norm ();
+      return (p - projectionOnSegment (p, a, b)).norm ();
     }
 
 
@@ -109,15 +108,16 @@ namespace roboptim
                                  const point_t& a,
                                  const point_t& b)
     {
-      value_type sq_ab_norm = (b-a).squaredNorm ();
+      value_type d_ab = (b-a).norm ();
 
       // If the segment is a point, i.e. a = b
-      if (sq_ab_norm < 1e-12)
-	return a;
+      if (d_ab < 1e-6) return a;
 
-      value_type alpha = -((a-p).dot (b-a))/sq_ab_norm;
-
-      return a + alpha * (b-a);
+      // We note q the projection of p on the line (a,b)
+      value_type d_aq = (p-a).dot (b-a);
+      if (d_aq > d_ab) return b;
+      else if (d_aq < 0.) return a;
+      else return a + d_aq * (b-a).normalized ();
     }
 
 
@@ -377,7 +377,7 @@ namespace roboptim
       endPoint2[0] = src[3];
       endPoint2[1] = src[4];
       endPoint2[2] = src[5];
-      radius = src[6];
+      radius       = src[6];
     }
 
 
@@ -427,7 +427,7 @@ namespace roboptim
       // Get capsule parameters.
       endPoint1 = capsule.P0;
       endPoint2 = capsule.P1;
-      radius = capsule.radius;
+      radius    = capsule.radius;
     }
 
 

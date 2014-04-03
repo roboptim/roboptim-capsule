@@ -134,15 +134,15 @@ namespace roboptim
     /// parameters and volume are printed.
     inline std::ostream& operator<< (std::ostream& os, const Fitter& fitter)
     {
-      os << "initial parameters" << std::endl;
-      os << fitter.initParam () << std::endl;
-      os << "initial volume" << std::endl;
-      os << fitter.initVolume () << std::endl;
-      os << "solution parameters" << std::endl;
-      os << fitter.solutionParam () << std::endl;
-      os << "solution volume" << std::endl;
-      os << fitter.solutionVolume () << std::endl;
-      os << "-----------------------------------------------------------";
+      using namespace roboptim;
+      using roboptim::operator <<;
+
+      os << "Capsule parameters:" << incindent;
+      os << iendl << "Initial parameters: " << fitter.initParam ();
+      os << iendl << "Initial volume: " << fitter.initVolume ();
+      os << iendl << "Solution parameters: " << fitter.solutionParam ();
+      os << iendl << "Solution volume: " << fitter.solutionVolume ();
+      os << decendl;
 
       return os;
     }

@@ -90,18 +90,23 @@ BOOST_AUTO_TEST_CASE (fitter)
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[3], 0.,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[4], 0.,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[5], 0.,epsilon);
-  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[6], std::sqrt(3. * 0.5 * 0.5), epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[6],
+                             std::sqrt(3. * std::pow (halfLength, 2)),
+                             epsilon);
 
   polyhedrons.clear ();
   convexPolyhedrons.clear ();
-  polyhedron[0][0] -= halfLength;
-  polyhedron[1][0] -= halfLength;
-  polyhedron[2][0] -= halfLength;
-  polyhedron[3][0] -= halfLength;
-  polyhedron[4][0] += halfLength;
-  polyhedron[5][0] += halfLength;
-  polyhedron[6][0] += halfLength;
-  polyhedron[7][0] += halfLength;
+
+  // Enlarge the cube to get a rectangular box
+  int n = 4;
+  polyhedron[0][0] -= n * halfLength;
+  polyhedron[1][0] -= n * halfLength;
+  polyhedron[2][0] -= n * halfLength;
+  polyhedron[3][0] -= n * halfLength;
+  polyhedron[4][0] += n * halfLength;
+  polyhedron[5][0] += n * halfLength;
+  polyhedron[6][0] += n * halfLength;
+  polyhedron[7][0] += n * halfLength;
   polyhedrons.push_back (polyhedron);
   computeConvexPolyhedron (polyhedrons, convexPolyhedrons);
 
