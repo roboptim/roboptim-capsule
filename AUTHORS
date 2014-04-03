@@ -2,3 +2,6 @@ This package was written by and with the assistance of
 
 * Antonio El Khoury                aelkhour@laas.fr
 - Package creation.
+
+* Benjamin Chrétien                chretien@lirmm.fr
+- Eigen + qhull support.
