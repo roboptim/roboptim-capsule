@@ -17,19 +17,19 @@ env:
 notifications:
   hipchat:
     rooms:
-    - secure: YH0AqP/y2L3+YkHNezAOfBNMB5QkeEYE3z5NV5k7gxqaEPEklQeMrSHLZzN1TuSyms/RuiQ6Zj0QA9D2ZxioTxTqGUQbh5c+Ia5n5GTIJZYg24uVXPS1w6uFQSyVNIZE6tJGpgf0RHzeGtejRW7Q9Ppr6e55TBnBc53fGTqJyPs=
+      - secure: YH0AqP/y2L3+YkHNezAOfBNMB5QkeEYE3z5NV5k7gxqaEPEklQeMrSHLZzN1TuSyms/RuiQ6Zj0QA9D2ZxioTxTqGUQbh5c+Ia5n5GTIJZYg24uVXPS1w6uFQSyVNIZE6tJGpgf0RHzeGtejRW7Q9Ppr6e55TBnBc53fGTqJyPs=
   email: roboptim@googlegroups.com
 branches:
   only:
   - master
   - debian
+before_install:
+  - ./.travis/dependencies/eigen-3.2.0
+  - ./.travis/run  before_install
 script:
-- export LD_LIBRARY_PATH=`pkg-config --variable=plugindir roboptim-core`:$LD_LIBRARY_PATH; ./.travis/run build
+  - export LD_LIBRARY_PATH=`pkg-config --variable=plugindir roboptim-core`:$LD_LIBRARY_PATH; ./.travis/run build
 after_success: ./.travis/run after_success
 after_failure: ./.travis/run after_failure
-before_install:
-- ./.travis/dependencies/eigen-3.2.0
-- ./.travis/run  before_install
 matrix:
   allow_failures:
     - compiler: clang

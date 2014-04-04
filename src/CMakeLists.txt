@@ -1,7 +1,8 @@
 SET(LIBRARY_NAME ${PROJECT_NAME})
 
-ADD_LIBRARY(${LIBRARY_NAME}
-  SHARED
+ADD_LIBRARY(${LIBRARY_NAME} SHARED
+  ${HEADERS}
+  doc.hh
   distance-capsule-point.cc
   fitter.cc
   util.cc
