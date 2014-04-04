@@ -23,6 +23,13 @@
 #include <roboptim/capsule/util.hh>
 #include <roboptim/capsule/fitter.hh>
 
+#define BOOST_CHECK_SMALL_OR_CLOSE(EXP, OBS, TOL) \
+    if (std::fabs (EXP) < TOL) { \
+        BOOST_CHECK_SMALL(OBS, TOL); \
+    } else { \
+        BOOST_CHECK_CLOSE(EXP, OBS, TOL); \
+    }
+
 using boost::test_tools::output_test_stream;
 
 BOOST_AUTO_TEST_CASE (fitter)
@@ -51,7 +58,7 @@ BOOST_AUTO_TEST_CASE (fitter)
   //
   // To do so, compute initial guess by finding a bounding capsule
   // (not the minimum one).
-  // 
+  //
   // If needed, the convex hull of the polyhedron can be first computed
   // to reduce the number of constraints and accelerate the optimization
   // phase.
@@ -60,10 +67,11 @@ BOOST_AUTO_TEST_CASE (fitter)
 
   // Create fitter. It is used to find the best fitting capsule on the
   // polyhedron vector.
-  Fitter fitter (convexPolyhedrons);
+  Fitter fitter_cube (convexPolyhedrons);
 
-  point_t endPoint1, endPoint2;
-  value_type radius;
+  point_t endPoint1 = point_t (0., 0., 0.);
+  point_t endPoint2 = point_t (0., 0., 0.);
+  value_type radius = 0.;
   computeBoundingCapsulePolyhedron (convexPolyhedrons,
 				    endPoint1, endPoint2, radius);
 
@@ -71,7 +79,41 @@ BOOST_AUTO_TEST_CASE (fitter)
   convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
 
   // Compute best fitting capsule.
-  fitter.computeBestFitCapsule (initParam);
-  argument_t solutionParam = fitter.solutionParam ();
-  std::cout << fitter << std::endl;
+  fitter_cube.computeBestFitCapsule (initParam);
+  argument_t solutionParam = fitter_cube.solutionParam ();
+  std::cout << fitter_cube << std::endl;
+
+  double epsilon = 1e-3;
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[0], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[1], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[2], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[3], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[4], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[5], 0.,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[6],
+                             std::sqrt(3. * std::pow (halfLength, 2)),
+                             epsilon);
+
+  polyhedrons.clear ();
+  convexPolyhedrons.clear ();
+
+  // Enlarge the cube to get a rectangular box
+  int n = 4;
+  polyhedron[0][0] -= n * halfLength;
+  polyhedron[1][0] -= n * halfLength;
+  polyhedron[2][0] -= n * halfLength;
+  polyhedron[3][0] -= n * halfLength;
+  polyhedron[4][0] += n * halfLength;
+  polyhedron[5][0] += n * halfLength;
+  polyhedron[6][0] += n * halfLength;
+  polyhedron[7][0] += n * halfLength;
+  polyhedrons.push_back (polyhedron);
+  computeConvexPolyhedron (polyhedrons, convexPolyhedrons);
+
+  Fitter fitter_rect (convexPolyhedrons);
+  computeBoundingCapsulePolyhedron (convexPolyhedrons,
+				    endPoint1, endPoint2, radius);
+  convertCapsuleToSolverParam (initParam, endPoint1, endPoint2, radius);
+  fitter_rect.computeBestFitCapsule (initParam);
+  std::cout << fitter_rect << std::endl;
 }

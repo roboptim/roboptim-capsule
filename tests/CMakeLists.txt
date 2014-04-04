@@ -26,6 +26,7 @@ MACRO(ADD_TESTCASE NAME)
 ENDMACRO(ADD_TESTCASE)
 
 # Generated test.
+ADD_TESTCASE(util)
 ADD_TESTCASE(capsule-volume)
 ADD_TESTCASE(distance-capsule-point)
 ADD_TESTCASE(fitter)

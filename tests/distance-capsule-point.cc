@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
   argument[6] = sqrt (3) / 2;
 
   // Cycle throught all points in cube polyhedron.
-  for (size_type i = 0; i < polyhedron.size (); ++i)
+  for (size_t i = 0; i < polyhedron.size (); ++i)
     {
       // Create distance function.
       point_t point = polyhedron[i];
@@ -71,9 +71,9 @@ BOOST_AUTO_TEST_CASE (distance_capsule_polyhedron)
       std::cout << distanceFunction (argument)[0] << std::endl;
 
       // Compute distance gradient function.
-      roboptim::FiniteDifferenceGradient<>
+      roboptim::GenericFiniteDifferenceGradient<roboptim::EigenMatrixDense>
 	fdgDistanceFunction (distanceFunction, 1e-6);
-      
+
       std::cout << "gradient" << std::endl;
       std::cout << distanceFunction.gradient (argument) << std::endl;
       std::cout << "finite difference gradient" << std::endl;

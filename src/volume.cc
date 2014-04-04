@@ -54,7 +54,7 @@ namespace roboptim
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
-      result.clear ();
+      result.setZero ();
 
       // Compute capsule volume.
       value_type length = sqrt ((argument[0] - argument[3])
@@ -78,7 +78,7 @@ namespace roboptim
       assert (functionId == 0);
       assert (argument.size () == 7 &&  "Wrong argument size, expected 7.");
 
-      gradient.clear ();
+      gradient.setZero ();
 
       value_type length = sqrt ((argument[0] - argument[3])
 				* (argument[0] - argument[3])

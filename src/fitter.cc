@@ -43,7 +43,7 @@ namespace roboptim
       : polyhedrons_ (polyhedrons)
     {
       argument_t param (7);
-      param.clear ();
+      param.setZero ();
       solutionParam_ = param;
     }
 
@@ -65,7 +65,7 @@ namespace roboptim
       polyhedrons_ = polyhedrons;
     }
 
-    const value_type Fitter::
+    value_type Fitter::
     initVolume () const throw ()
     {
       assert (initVolume_ > 0
@@ -74,7 +74,7 @@ namespace roboptim
       return initVolume_;
     }
 
-    const value_type Fitter::
+    value_type Fitter::
     solutionVolume () const throw ()
     {
       assert (solutionVolume_ > 0
@@ -127,7 +127,7 @@ namespace roboptim
 				const argument_t& initParam) throw ()
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
-      
+
       return solutionParam_;
     }
 
@@ -141,7 +141,7 @@ namespace roboptim
       assert (polyhedrons.size () != 0 && "Empty polyhedron vector");
       assert (initParam.size () == 7
 	      && "Incorrect initParam size, expected 7.");
-      
+
       // Define volume function. It is the cost of the optimization
       // problem.
       Volume volume;
@@ -162,16 +162,16 @@ namespace roboptim
       // problem.
       BOOST_FOREACH (polyhedron_t polyhedron, polyhedrons)
 	{
-	  for (size_type j = 0; j < polyhedron.size (); ++j)
+	  for (size_t j = 0; j < polyhedron.size (); ++j)
 	    {
-	      point_t point = polyhedron[j];
-	
+	      const point_t& point = polyhedron[j];
+
 	      std::string s = "distance to point ";
 	      std::stringstream name;
 	      name << s << j;
 
 	      // Add distance constraint. Distance must always be negative
-	      // (point remains inside capsule when as it shrinks).
+	      // (points remain inside the capsule as it shrinks).
 	      boost::shared_ptr<DistanceCapsulePoint>
 		distance (new DistanceCapsulePoint (point, name.str ()));
 	      Function::interval_t distanceInterval
@@ -191,6 +191,19 @@ namespace roboptim
       solver.parameters ()["ipopt.file_print_level"].value = 5;
       solver.parameters ()["ipopt.print_user_options"].value = "yes";
       solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.out";
+      solver.parameters ()["ipopt.bound_relax_factor"].value = 1e-12;
+      solver.parameters ()["ipopt.tol"].value = 1e-3;
+      solver.parameters ()["ipopt.compl_inf_tol"].value = 1e-6;
+      solver.parameters ()["ipopt.dual_inf_tol"].value = 1e5;
+      solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-6;
+      solver.parameters ()["ipopt.acceptable_iter"].value = 15;
+      solver.parameters ()["ipopt.acceptable_tol"].value = 1e1;
+      solver.parameters ()["ipopt.acceptable_obj_change_tol"].value = 1e-3;
+      solver.parameters ()["ipopt.acceptable_compl_inf_tol"].value = 1e-3;
+      solver.parameters ()["ipopt.acceptable_dual_inf_tol"].value = 1e2;
+      solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-5;
+      solver.parameters ()["ipopt.mu_strategy"].value = "adaptive";
+      solver.parameters ()["ipopt.nlp_scaling_method"].value = "gradient-based";
 
       // Solve problem and check if the optimum is correct.
       solver_t::result_t result = solver.minimum ();
@@ -216,7 +229,7 @@ namespace roboptim
 	case solver_t::SOLVER_VALUE_WARNINGS:
 	  {
 	    // Display the result.
-	    std::cout << "A solution has been found (minor problems occurred)"
+	    std::cout << "A solution has been found (with warnings)" << std::endl
 		      << solver.getMinimum<ResultWithWarnings> ()
 		      << std::endl;
 	    solutionParam = solver.getMinimum<ResultWithWarnings> ().x;
