@@ -73,7 +73,7 @@ namespace roboptim
 
       FORALLvertices {
 	// qh_pointid (vertex->point) is the point id of the vertex
-	int id = qh_pointid (vertex->point);
+	//int id = qh_pointid (vertex->point);
 	// vertex->point is the coordinates of the vertex
 	convexPolyhedron.push_back(point_t (vertex->point[0],
 					    vertex->point[1],

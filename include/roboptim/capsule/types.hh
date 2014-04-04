@@ -20,11 +20,9 @@
 # define ROBOPTIM_CAPSULE_FWD_HH_
 
 # include <Eigen/Core>
-# include <Eigen/Geometry>
 
 # include <roboptim/core/function.hh>
 # include <roboptim/core/solver.hh>
-# include <roboptim/core/plugin/ipopt.hh>
 
 namespace roboptim
 {
