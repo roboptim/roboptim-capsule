@@ -42,7 +42,8 @@ namespace roboptim
     {
     public:
       /// \brief Constructor.
-      Fitter (const polyhedrons_t& polyhedrons) throw ();
+      Fitter (const polyhedrons_t& polyhedrons,
+              std::string solver = "ipopt") throw ();
 
       ~Fitter () throw ();
 
@@ -126,6 +127,9 @@ namespace roboptim
 
       /// \brief Capsule solution parameters attribute.
       argument_t solutionParam_;
+
+      /// \brief Nonlinear solver.
+      std::string solver_;
     };
 
     /// \brief Print fitter after optimal capsule has been computed.

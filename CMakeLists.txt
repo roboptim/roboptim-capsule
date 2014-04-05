@@ -12,7 +12,8 @@ SET(PROJECT_DESCRIPTION
 SET(PROJECT_URL "https://github.com/roboptim/roboptim-capsule")
 
 # Where to compile shared objects
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 SET(${PROJECT_NAME}_HEADERS
   include/roboptim/capsule/distance-capsule-point.hh

@@ -39,8 +39,10 @@ namespace roboptim
     // -------------------PUBLIC FUNCTIONS-----------------------
 
     Fitter::
-    Fitter (const polyhedrons_t& polyhedrons) throw ()
-      : polyhedrons_ (polyhedrons)
+    Fitter (const polyhedrons_t& polyhedrons,
+            std::string solver) throw ()
+      : polyhedrons_ (polyhedrons),
+        solver_ (solver)
     {
       argument_t param (7);
       param.setZero ();
@@ -182,8 +184,10 @@ namespace roboptim
 	}
 
       // Create solver using Ipopt.
-      SolverFactory<solver_t> factory ("ipopt", problem);
+      SolverFactory<solver_t> factory (solver_, problem);
       solver_t& solver = factory ();
+
+      // Ipopt parameters
       solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.log";
       solver.parameters ()["ipopt.linear_solver"].value = "mumps";
       solver.parameters ()["ipopt.derivative_test"].value = "first-order";
