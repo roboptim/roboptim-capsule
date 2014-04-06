@@ -125,7 +125,8 @@ int main(int argc, char** argv)
 	  fitter.computeBestFitCapsule (initParam);
 
 	  // Display result
-	  std::cout << fitter.solutionParam () << std::endl;
+	  std::cout << "Initial: " << fitter.initParam () << std::endl;
+	  std::cout << "Solution: " << fitter.solutionParam () << std::endl;
 	}
       catch (boost::program_options::required_option& e)
 	{
