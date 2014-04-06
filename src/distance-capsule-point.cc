@@ -50,7 +50,7 @@ namespace roboptim
     {
     }
 
-    const point_t DistanceCapsulePoint::
+    const point_t& DistanceCapsulePoint::
     point () const throw ()
     {
       return point_;
@@ -59,8 +59,8 @@ namespace roboptim
     // -------------------PROTECTED FUNCTIONS--------------------
 
     void DistanceCapsulePoint::
-    impl_compute (result_t & result,
-		  const argument_t & argument) const throw ()
+    impl_compute (result_t& result,
+		  const argument_t& argument) const throw ()
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 

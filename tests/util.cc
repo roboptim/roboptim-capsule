@@ -26,6 +26,13 @@
 
 using boost::test_tools::output_test_stream;
 
+#define BOOST_CHECK_SMALL_OR_CLOSE(EXP, OBS, TOL) \
+  if (std::fabs (EXP) < TOL) { \
+    BOOST_CHECK_SMALL(OBS, TOL); \
+  } else { \
+    BOOST_CHECK_CLOSE(EXP, OBS, TOL); \
+  }
+
 BOOST_AUTO_TEST_CASE (util)
 {
   using namespace roboptim::capsule;
@@ -36,21 +43,30 @@ BOOST_AUTO_TEST_CASE (util)
   point_t y (0., 1., 0.);
   point_t z (0., 0., 1.);
 
-  point_t a  (2.,  0., 0.);
-  point_t b  (3.,  0., 0.);
+  point_t a = point_t::Random ();
+  point_t b = point_t::Random ();
 
-  point_t p0 = a - x;
-  point_t p1 = b + x;
+  vector3_t dir_x = (b - a).normalized ();
+  vector3_t dir_y = (dir_x.cross (z)).normalized ();
+  if (dir_y.norm () < 1e-6)
+    dir_y = (dir_x.cross (y)).normalized ();
+  vector3_t dir_z = (dir_x.cross (dir_y)).normalized ();
+
+  point_t p0 = a - dir_x;
+  point_t p1 = b + dir_x;
   point_t p2 = (a + b)/2.;
-  point_t p3 = p2 + y;
+  point_t p3 = p2 + dir_y;
+  point_t p4 = a + 0.25 * (dir_x + dir_y);
 
-  BOOST_CHECK_CLOSE (distancePointToSegment (p0, a, b), 1., epsilon);
-  BOOST_CHECK_CLOSE (distancePointToSegment (p1, a, b), 1., epsilon);
-  BOOST_CHECK_CLOSE (distancePointToSegment (p2, a, b), 0., epsilon);
-  BOOST_CHECK_CLOSE (distancePointToSegment (p3, a, b), 1., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (distancePointToSegment (p0, a, b), 1., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (distancePointToSegment (p1, a, b), 1., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (distancePointToSegment (p2, a, b), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (distancePointToSegment (p3, a, b), 1., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (distancePointToSegment (p4, a, b), 0.25, epsilon);
 
-  BOOST_CHECK_CLOSE ((a  - projectionOnSegment (p0, a, b)).norm (), 0., epsilon);
-  BOOST_CHECK_CLOSE ((b  - projectionOnSegment (p1, a, b)).norm (), 0., epsilon);
-  BOOST_CHECK_CLOSE ((p2 - projectionOnSegment (p2, a, b)).norm (), 0., epsilon);
-  BOOST_CHECK_CLOSE ((p2 - projectionOnSegment (p3, a, b)).norm (), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE ((a  - projectionOnSegment (p0, a, b)).norm (), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE ((b  - projectionOnSegment (p1, a, b)).norm (), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE ((p2 - projectionOnSegment (p2, a, b)).norm (), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE ((p2 - projectionOnSegment (p3, a, b)).norm (), 0., epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE (((a + 0.25 * dir_x) - projectionOnSegment (p4, a, b)).norm (), 0., epsilon);
 }

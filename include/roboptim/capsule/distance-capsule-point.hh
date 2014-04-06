@@ -48,7 +48,7 @@ namespace roboptim
       ~DistanceCapsulePoint () throw ();
 
       /// \brief Get point attribute.
-      virtual const point_t point () const throw ();
+      virtual const point_t& point () const throw ();
 
     protected:
       /// \brief Computes the distance from capsule to a point.

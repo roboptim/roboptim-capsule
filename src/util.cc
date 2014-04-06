@@ -114,7 +114,7 @@ namespace roboptim
       if (d_ab < 1e-6) return a;
 
       // We note q the projection of p on the line (a,b)
-      value_type d_aq = (p-a).dot (b-a);
+      value_type d_aq = (p-a).dot (b-a)/d_ab;
       if (d_aq > d_ab) return b;
       else if (d_aq < 0.) return a;
       else return a + d_aq * (b-a).normalized ();
