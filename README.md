@@ -11,6 +11,8 @@ This package is an application for the RobOptim framework. This
 software computes an automated optimal capsule generator over
 polyhedrons.
 
+![examples](https://raw.githubusercontent.com/roboptim/roboptim-capsule/master/doc/examples.png)
+
 It is released under the [LGPL-3](COPYING.LESSER) license.
 
 **Warning:** this repository contains [Git
