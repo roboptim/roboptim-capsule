@@ -43,7 +43,7 @@
 
    The package relies on:
    <ul>
-   <li>geometric types and operations (<a href="http://www.geometrictools.com/">geometric-tools</a>, aka WildMagic),</li>
+   <li>geometric types and operations (<a href="http://eigen.tuxfamily.org">Eigen</a>, <a href="http://www.qhull.org/">Qhull</a>),</li>
    <li>and numerical optimization (<a href="http://roboptim.net/">RobOptim and its IPOPT plugin</a>).</li>
    </ul>
 
@@ -56,7 +56,7 @@
    and enhancement proposals are highly welcomed.
 
    To report a bug, please go this package's
-   <a href="https://github.com/laas/roboptim-capsule/">web page</a>.
+   <a href="https://github.com/roboptim/roboptim-capsule/">web page</a>.
 */
 
 /**
@@ -94,7 +94,7 @@
    BOOST_AUTO_TEST_CASE (fitter)
    {
    using namespace roboptim::capsule;
-   
+
    // Build a cubic polyhedron centered in (0,0,0).
    polyhedron_t polyhedron;
    value_type halfLength = 0.5;
@@ -124,7 +124,7 @@
    - Instanciate a fitter. This is the main class in this package and
      is used to find the best fitting capsule over the input
      polyhedron vector.
-   
+
    \code
    Fitter fitter (convexPolyhedrons);
    \endcode
