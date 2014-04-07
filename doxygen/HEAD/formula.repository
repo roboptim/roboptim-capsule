@@ -1,0 +1,6 @@
+\form#0:$e_1$
+\form#1:$e_2$
+\form#2:$r$
+\form#3:$min_{e_1, e_2, r} \|e_2 - e_1\| \pi r^2 + \frac{4}{3}\pi r^3$
+\form#4:$r - d(p,e_1e_2) \geq p \in \mathcal{P}$
+\form#5:$\mathcal{P}$
