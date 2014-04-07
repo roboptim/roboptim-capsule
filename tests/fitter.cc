@@ -83,11 +83,11 @@ BOOST_AUTO_TEST_CASE (fitter)
   argument_t solutionParam = fitter_cube.solutionParam ();
   std::cout << fitter_cube << std::endl;
 
-  double epsilon = 1e-3;
-  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[0], 0.190394,epsilon);
+  double epsilon = 1e-1;
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[0], 0.190393847,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[1], 0.,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[2], 0.,epsilon);
-  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[3], -0.190394,epsilon);
+  BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[3], -0.190393847,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[4], 0.,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[5], 0.,epsilon);
   BOOST_CHECK_SMALL_OR_CLOSE(solutionParam[6], 0.77191705555821011, epsilon)
