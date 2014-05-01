@@ -16,7 +16,7 @@ polyhedrons.
 It is released under the [LGPL-3](COPYING.LESSER) license.
 
 **Warning:** this repository contains [Git
-submodules][git-submodules]. Please clone this repository using the
+submodules](.gitmodules). Please clone this repository using the
 `git clone --recursive` command. If you already have cloned the
 repository, you can run `git submodule init && git submodule update`
 to retrieve the submodules.
