@@ -40,7 +40,7 @@ namespace roboptim
 
     Fitter::
     Fitter (const polyhedrons_t& polyhedrons,
-            std::string solver) throw ()
+            std::string solver)
       : polyhedrons_ (polyhedrons),
         solver_ (solver)
     {
@@ -50,25 +50,25 @@ namespace roboptim
     }
 
     Fitter::
-    ~Fitter () throw ()
+    ~Fitter ()
     {
     }
 
     const polyhedrons_t Fitter::
-    polyhedrons () const throw ()
+    polyhedrons () const
     {
       return polyhedrons_;
     }
 
     void Fitter::
-    polyhedrons (const polyhedrons_t& polyhedrons) throw ()
+    polyhedrons (const polyhedrons_t& polyhedrons)
     {
       assert (polyhedrons.size () != 0 && "Empty polyhedron vector.");
       polyhedrons_ = polyhedrons;
     }
 
     value_type Fitter::
-    initVolume () const throw ()
+    initVolume () const
     {
       assert (initVolume_ > 0
 	      && "Incorrect initial volume value. Must be non-negative.");
@@ -77,7 +77,7 @@ namespace roboptim
     }
 
     value_type Fitter::
-    solutionVolume () const throw ()
+    solutionVolume () const
     {
       assert (solutionVolume_ > 0
 	      && "Incorrect solution volume value. Must be non-negative.");
@@ -86,7 +86,7 @@ namespace roboptim
     }
 
     const argument_t Fitter::
-    initParam () const throw ()
+    initParam () const
     {
       assert (initParam_.size () == 7
 	      && "Incorrect initParam size, expected 7.");
@@ -95,7 +95,7 @@ namespace roboptim
     }
 
     const argument_t Fitter::
-    solutionParam () const throw ()
+    solutionParam () const
     {
       assert (solutionParam_.size () == 7
 	      && "Incorrect solutionParam size, expected 7.");
@@ -104,20 +104,20 @@ namespace roboptim
     }
 
     void Fitter::
-    computeBestFitCapsule (const argument_t& initParam) throw ()
+    computeBestFitCapsule (const argument_t& initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
     }
 
     void Fitter::
     computeBestFitCapsule (const polyhedrons_t& polyhedrons,
-			   const argument_t& initParam) throw ()
+			   const argument_t& initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
     }
 
     const argument_t Fitter::
-    computeBestFitCapsuleParam (const argument_t& initParam) throw ()
+    computeBestFitCapsuleParam (const argument_t& initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
 
@@ -126,7 +126,7 @@ namespace roboptim
 
     const argument_t Fitter::
     computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
-				const argument_t& initParam) throw ()
+				const argument_t& initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
 
@@ -138,7 +138,7 @@ namespace roboptim
     void Fitter::
     impl_computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
 				     const argument_t& initParam,
-				     argument_t& solutionParam) throw ()
+				     argument_t& solutionParam)
     {
       assert (polyhedrons.size () != 0 && "Empty polyhedron vector");
       assert (initParam.size () == 7

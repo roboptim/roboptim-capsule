@@ -43,12 +43,12 @@ namespace roboptim
       /// between the capsule and the point.
       DistanceCapsulePoint (const point_t& point,
 			    std::string name
-			    = "distance to point") throw ();
+			    = "distance to point");
 
-      ~DistanceCapsulePoint () throw ();
+      ~DistanceCapsulePoint ();
 
       /// \brief Get point attribute.
-      virtual const point_t& point () const throw ();
+      virtual const point_t& point () const;
 
     protected:
       /// \brief Computes the distance from capsule to a point.
@@ -62,7 +62,7 @@ namespace roboptim
       /// capsule radius.
       virtual void
       impl_compute (result_t& result,
-		    const argument_t& argument) const throw ();
+		    const argument_t& argument) const;
 
       /// \brief Compute of the distance gradient with respect to the
       /// capsule parameters.
@@ -74,7 +74,7 @@ namespace roboptim
       virtual void
       impl_gradient (gradient_t& gradient,
 		     const argument_t& argument,
-		     size_type functionId = 0) const throw ();
+		     size_type functionId = 0) const;
 
     private:
       /// \brief Point attribute.

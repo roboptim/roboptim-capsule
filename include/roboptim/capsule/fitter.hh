@@ -43,34 +43,34 @@ namespace roboptim
     public:
       /// \brief Constructor.
       Fitter (const polyhedrons_t& polyhedrons,
-              std::string solver = "ipopt") throw ();
+              std::string solver = "ipopt");
 
-      ~Fitter () throw ();
+      ~Fitter ();
 
       /// \brief Get polyhedron attribute.
-      const polyhedrons_t polyhedrons () const throw ();
+      const polyhedrons_t polyhedrons () const;
 
       /// \brief Set polyhedron attribute.
-      void polyhedrons (const polyhedrons_t& polyhedrons) throw ();
+      void polyhedrons (const polyhedrons_t& polyhedrons);
 
       /// \brief Get capsule volume for initial parameters.
-      value_type initVolume () const throw ();
+      value_type initVolume () const;
 
       /// \brief Get capsule volume for solution parameters.
-      value_type solutionVolume () const throw ();
+      value_type solutionVolume () const;
 
       /// \brief Get initial capsule parameters.
-      const argument_t initParam () const throw ();
+      const argument_t initParam () const;
 
       /// \brief Get solution capsule parameters.
-      const argument_t solutionParam () const throw ();
+      const argument_t solutionParam () const;
 
       /// \brief Compute best fitting capsule over polyhedron.
       ///
       /// Polyhedron vector attribute is used to compute capsule and set
       /// capsuleParam attribute.
       /// \param initParam initial capsule parameters
-      void computeBestFitCapsule (const argument_t& initParam) throw ();
+      void computeBestFitCapsule (const argument_t& initParam);
 
       /// \brief Compute best fitting capsule over polyhedron vector.
       ///
@@ -78,7 +78,7 @@ namespace roboptim
       /// fitted
       /// \param initParam initial capsule parameters
       void computeBestFitCapsule (const polyhedrons_t& polyhedrons,
-				  const argument_t& initParam) throw ();
+				  const argument_t& initParam);
 
       /// \brief Compute best fitting capsule over polyhedron vector.
       ///
@@ -88,7 +88,7 @@ namespace roboptim
       /// \param initParam initial capsule parameters
       /// \return capsule parameters
       const argument_t computeBestFitCapsuleParam (const argument_t&
-						   initParam) throw ();
+						   initParam);
 
       /// \brief Compute best fitting capsule over polyhedron.
       ///
@@ -100,7 +100,7 @@ namespace roboptim
       const argument_t computeBestFitCapsuleParam (const polyhedrons_t&
 						   polyhedrons,
 						   const argument_t&
-						   initParam) throw ();
+						   initParam);
 
     protected:
       /// \brief Implementation of best fitting capsule computation.
@@ -110,7 +110,7 @@ namespace roboptim
       /// \return solutionParam solution capsule parameters
       void impl_computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
 					    const argument_t& initParam,
-					    argument_t& solutionParam) throw ();
+					    argument_t& solutionParam);
 
     private:
       /// \brief Polyhedron vector attribute.

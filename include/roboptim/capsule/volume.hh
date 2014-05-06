@@ -41,9 +41,9 @@ namespace roboptim
     {
     public:
       /// \brief Constructor.
-      Volume (std::string name = "capsule volume") throw ();
+      Volume (std::string name = "capsule volume");
 
-      ~Volume () throw ();
+      ~Volume ();
 
     protected:
       /// \brief Compute the volume of the capsule.
@@ -54,14 +54,14 @@ namespace roboptim
       /// capsule radius.
       virtual void
       impl_compute (result_t& result,
-		    const argument_t& argument) const throw ();
+		    const argument_t& argument) const;
 
       /// \brief Compute gradient of the capsule volume with respect
       /// to the argument vector.
       virtual void
       impl_gradient (gradient_t& gradient,
 		     const argument_t& argument,
-		     size_type functionId = 0) const throw ();
+		     size_type functionId = 0) const;
     };
 
   } // end of namespace capsule.

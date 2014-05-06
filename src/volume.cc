@@ -36,13 +36,13 @@ namespace roboptim
     // -------------------PUBLIC FUNCTIONS-----------------------
 
     Volume::
-    Volume (std::string name) throw ()
+    Volume (std::string name)
       : roboptim::DifferentiableFunction (7, 1, name)
     {
     }
 
     Volume::
-    ~Volume () throw ()
+    ~Volume ()
     {
     }
 
@@ -50,7 +50,7 @@ namespace roboptim
 
     void Volume::
     impl_compute (result_t & result,
-		  const argument_t & argument) const throw ()
+		  const argument_t & argument) const
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
@@ -73,7 +73,7 @@ namespace roboptim
     void Volume::
     impl_gradient (gradient_t& gradient,
 		   const argument_t& argument,
-		   size_type functionId) const throw ()
+		   size_type functionId) const
     {
       assert (functionId == 0);
       assert (argument.size () == 7 &&  "Wrong argument size, expected 7.");

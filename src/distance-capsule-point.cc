@@ -39,19 +39,19 @@ namespace roboptim
 
     DistanceCapsulePoint::
     DistanceCapsulePoint (const point_t& point,
-			  std::string name) throw ()
+			  std::string name)
       : roboptim::DifferentiableFunction (7, 1, name),
 	point_ (point)
     {
     }
 
     DistanceCapsulePoint::
-    ~DistanceCapsulePoint () throw ()
+    ~DistanceCapsulePoint ()
     {
     }
 
     const point_t& DistanceCapsulePoint::
-    point () const throw ()
+    point () const
     {
       return point_;
     }
@@ -60,7 +60,7 @@ namespace roboptim
 
     void DistanceCapsulePoint::
     impl_compute (result_t& result,
-		  const argument_t& argument) const throw ()
+		  const argument_t& argument) const
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
@@ -81,7 +81,7 @@ namespace roboptim
     void DistanceCapsulePoint::
     impl_gradient (gradient_t& gradient,
 		   const argument_t& argument,
-		   size_type /*functionId*/) const throw ()
+		   size_type /*functionId*/) const
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
