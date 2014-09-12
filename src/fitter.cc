@@ -29,6 +29,7 @@
 # include <sstream>
 
 # include <roboptim/core/finite-difference-gradient.hh>
+# include <roboptim/core/linear-function.hh>
 
 # include <roboptim/capsule/fitter.hh>
 
