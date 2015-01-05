@@ -7,9 +7,8 @@ roboptim-capsule
 ![LGPL-3](https://www.gnu.org/graphics/lgplv3-88x31.png)
 
 
-This package is an application for the RobOptim framework. This
-software computes an automated optimal capsule generator over
-polyhedrons.
+This package is an application for the [RobOptim][RobOptim] framework. It
+provides an automated optimal capsule generator over polyhedrons.
 
 ![examples](https://raw.githubusercontent.com/roboptim/roboptim-capsule/master/doc/examples.png)
 
@@ -24,3 +23,5 @@ to retrieve the submodules.
 
 For general information about the project, please refer to its
 homepage: http://www.roboptim.net/
+
+[RobOptim]: http://www.roboptim.net/
