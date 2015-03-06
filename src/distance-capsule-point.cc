@@ -59,8 +59,8 @@ namespace roboptim
     // -------------------PROTECTED FUNCTIONS--------------------
 
     void DistanceCapsulePoint::
-    impl_compute (result_t& result,
-		  const argument_t& argument) const
+    impl_compute (result_ref result,
+		  const_argument_ref argument) const
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");
 
@@ -79,8 +79,8 @@ namespace roboptim
 
 
     void DistanceCapsulePoint::
-    impl_gradient (gradient_t& gradient,
-		   const argument_t& argument,
+    impl_gradient (gradient_ref gradient,
+		   const_argument_ref argument,
 		   size_type /*functionId*/) const
     {
       assert (argument.size () == 7 && "Wrong argument size, expected 7.");

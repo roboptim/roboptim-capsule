@@ -105,7 +105,7 @@ namespace roboptim
     /// \return dst parameters vector containing, in this
     /// order, the capsule axis first end point coordinates, the
     /// capsule axis second end point coordinates and the radius.
-    void convertCapsuleToSolverParam (argument_t& dst,
+    void convertCapsuleToSolverParam (argument_ref dst,
 				      const point_t& endPoint1,
 				      const point_t& endPoint2,
 				      const value_type& radius);

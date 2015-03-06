@@ -70,7 +70,7 @@ namespace roboptim
       /// Polyhedron vector attribute is used to compute capsule and set
       /// capsuleParam attribute.
       /// \param initParam initial capsule parameters
-      void computeBestFitCapsule (const argument_t& initParam);
+      void computeBestFitCapsule (const_argument_ref initParam);
 
       /// \brief Compute best fitting capsule over polyhedron vector.
       ///
@@ -78,7 +78,7 @@ namespace roboptim
       /// fitted
       /// \param initParam initial capsule parameters
       void computeBestFitCapsule (const polyhedrons_t& polyhedrons,
-				  const argument_t& initParam);
+				  const_argument_ref initParam);
 
       /// \brief Compute best fitting capsule over polyhedron vector.
       ///
@@ -87,7 +87,7 @@ namespace roboptim
       ///
       /// \param initParam initial capsule parameters
       /// \return capsule parameters
-      const argument_t computeBestFitCapsuleParam (const argument_t&
+      const argument_t computeBestFitCapsuleParam (const_argument_ref
 						   initParam);
 
       /// \brief Compute best fitting capsule over polyhedron.
@@ -99,7 +99,7 @@ namespace roboptim
       /// \return capsule parameters
       const argument_t computeBestFitCapsuleParam (const polyhedrons_t&
 						   polyhedrons,
-						   const argument_t&
+						   const_argument_ref
 						   initParam);
 
     protected:
@@ -109,8 +109,8 @@ namespace roboptim
       /// \param initParam initial capsule parameters
       /// \return solutionParam solution capsule parameters
       void impl_computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
-					    const argument_t& initParam,
-					    argument_t& solutionParam);
+					    const_argument_ref initParam,
+					    argument_ref solutionParam);
 
     private:
       /// \brief Polyhedron vector attribute.

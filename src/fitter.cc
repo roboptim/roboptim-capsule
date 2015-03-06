@@ -105,20 +105,20 @@ namespace roboptim
     }
 
     void Fitter::
-    computeBestFitCapsule (const argument_t& initParam)
+    computeBestFitCapsule (const_argument_ref initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
     }
 
     void Fitter::
     computeBestFitCapsule (const polyhedrons_t& polyhedrons,
-			   const argument_t& initParam)
+			   const_argument_ref initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
     }
 
     const argument_t Fitter::
-    computeBestFitCapsuleParam (const argument_t& initParam)
+    computeBestFitCapsuleParam (const_argument_ref initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
 
@@ -127,7 +127,7 @@ namespace roboptim
 
     const argument_t Fitter::
     computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
-				const argument_t& initParam)
+				const_argument_ref initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
 
@@ -138,8 +138,8 @@ namespace roboptim
 
     void Fitter::
     impl_computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
-				     const argument_t& initParam,
-				     argument_t& solutionParam)
+				     const_argument_ref initParam,
+				     argument_ref solutionParam)
     {
       assert (polyhedrons.size () != 0 && "Empty polyhedron vector");
       assert (initParam.size () == 7

@@ -53,14 +53,14 @@ namespace roboptim
       /// coordinates, the segment second end point coordinates, the
       /// capsule radius.
       virtual void
-      impl_compute (result_t& result,
-		    const argument_t& argument) const;
+      impl_compute (result_ref result,
+		    const_argument_ref argument) const;
 
       /// \brief Compute gradient of the capsule volume with respect
       /// to the argument vector.
       virtual void
-      impl_gradient (gradient_t& gradient,
-		     const argument_t& argument,
+      impl_gradient (gradient_ref gradient,
+		     const_argument_ref argument,
 		     size_type functionId = 0) const;
     };
 

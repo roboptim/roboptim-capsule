@@ -31,7 +31,11 @@ namespace roboptim
     /// \brief Import types from roboptim Function.
     typedef roboptim::Function::value_type        value_type;
     typedef roboptim::Function::size_type         size_type;
-    typedef roboptim::Function::argument_t        argument_t;
+
+    typedef roboptim::Function::argument_t         argument_t;
+    typedef roboptim::Function::argument_ref       argument_ref;
+    typedef roboptim::Function::const_argument_ref const_argument_ref;
+
     typedef roboptim::Function::vector_t          vector_t;
     typedef roboptim::Function::matrix_t          matrix_t;
 
