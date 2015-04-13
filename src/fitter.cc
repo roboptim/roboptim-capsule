@@ -28,8 +28,13 @@
 # include <math.h>
 # include <sstream>
 
+# include <boost/shared_ptr.hpp>
+# include <boost/make_shared.hpp>
+# include <boost/ref.hpp>
+
 # include <roboptim/core/finite-difference-gradient.hh>
 # include <roboptim/core/linear-function.hh>
+# include <roboptim/core/optimization-logger.hh>
 
 # include <roboptim/capsule/fitter.hh>
 
@@ -86,7 +91,7 @@ namespace roboptim
       return solutionVolume_;
     }
 
-    const argument_t Fitter::
+    const argument_t& Fitter::
     initParam () const
     {
       assert (initParam_.size () == 7
@@ -95,13 +100,23 @@ namespace roboptim
       return initParam_;
     }
 
-    const argument_t Fitter::
+    const argument_t& Fitter::
     solutionParam () const
     {
       assert (solutionParam_.size () == 7
 	      && "Incorrect solutionParam size, expected 7.");
 
       return solutionParam_;
+    }
+
+    boost::optional<std::string>& Fitter::logDirectory ()
+    {
+      return logDir_;
+    }
+
+    const boost::optional<std::string>& Fitter::logDirectory () const
+    {
+      return logDir_;
     }
 
     void Fitter::
@@ -117,7 +132,7 @@ namespace roboptim
       impl_computeBestFitCapsuleParam (polyhedrons, initParam, solutionParam_);
     }
 
-    const argument_t Fitter::
+    const argument_t& Fitter::
     computeBestFitCapsuleParam (const_argument_ref initParam)
     {
       impl_computeBestFitCapsuleParam (polyhedrons_, initParam, solutionParam_);
@@ -125,7 +140,7 @@ namespace roboptim
       return solutionParam_;
     }
 
-    const argument_t Fitter::
+    const argument_t& Fitter::
     computeBestFitCapsuleParam (const polyhedrons_t& polyhedrons,
 				const_argument_ref initParam)
     {
@@ -209,6 +224,16 @@ namespace roboptim
       solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-5;
       solver.parameters ()["ipopt.mu_strategy"].value = "adaptive";
       solver.parameters ()["ipopt.nlp_scaling_method"].value = "gradient-based";
+
+      // Set optimization logger if a log directory was provided.
+      // Note: actual logging to file is done once the OptimizationLogger is
+      // destroyed.
+      boost::shared_ptr<OptimizationLogger<solver_t> > logger;
+      if (logDir_)
+	{
+	  // Add optimization logger.
+	  logger = boost::make_shared<OptimizationLogger<solver_t> > (boost::ref (solver), *logDir_);
+	}
 
       // Solve problem and check if the optimum is correct.
       solver_t::result_t result = solver.minimum ();

@@ -24,6 +24,8 @@
 #ifndef ROBOPTIM_CAPSULE_FITTER_HH
 # define ROBOPTIM_CAPSULE_FITTER_HH
 
+# include <boost/optional.hpp>
+
 # include <roboptim/core/solver-factory.hh>
 
 # include <roboptim/capsule/types.hh>
@@ -60,10 +62,14 @@ namespace roboptim
       value_type solutionVolume () const;
 
       /// \brief Get initial capsule parameters.
-      const argument_t initParam () const;
+      const argument_t& initParam () const;
 
       /// \brief Get solution capsule parameters.
-      const argument_t solutionParam () const;
+      const argument_t& solutionParam () const;
+
+      /// \brief Get the optional optimization log directory.
+      boost::optional<std::string>& logDirectory ();
+      const boost::optional<std::string>& logDirectory () const;
 
       /// \brief Compute best fitting capsule over polyhedron.
       ///
@@ -87,7 +93,7 @@ namespace roboptim
       ///
       /// \param initParam initial capsule parameters
       /// \return capsule parameters
-      const argument_t computeBestFitCapsuleParam (const_argument_ref
+      const argument_t& computeBestFitCapsuleParam (const_argument_ref
 						   initParam);
 
       /// \brief Compute best fitting capsule over polyhedron.
@@ -97,7 +103,7 @@ namespace roboptim
       ///
       /// \param initParam initial capsule parameters
       /// \return capsule parameters
-      const argument_t computeBestFitCapsuleParam (const polyhedrons_t&
+      const argument_t& computeBestFitCapsuleParam (const polyhedrons_t&
 						   polyhedrons,
 						   const_argument_ref
 						   initParam);
@@ -130,6 +136,9 @@ namespace roboptim
 
       /// \brief Nonlinear solver.
       std::string solver_;
+
+      /// \brief Optional optimization log directory.
+      boost::optional<std::string> logDir_;
     };
 
     /// \brief Print fitter after optimal capsule has been computed.

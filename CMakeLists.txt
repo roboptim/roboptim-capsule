@@ -28,6 +28,8 @@ SET(${PROJECT_NAME}_HEADERS
 SETUP_PROJECT()
 
 # Declare dependencies
+SET(BOOST_COMPONENTS
+  date_time filesystem system thread program_options unit_test_framework)
 SEARCH_FOR_BOOST()
 SEARCH_FOR_QHULL()
 ADD_REQUIRED_DEPENDENCY("eigen3 >= 3.2.0")

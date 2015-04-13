@@ -43,6 +43,7 @@ int main(int argc, char** argv)
       desc.add_options ()
 	("help", "Print this help and exit")
 	("solver", po::value<std::string> (), "Nonlinear solver used")
+	("log-dir", po::value<std::string> (), "Path to optimization logs")
 	("points", po::value<std::vector<double> > ()->multitoken ()->required (),
 	 "Points that will be encapsulated");
 
@@ -109,6 +110,12 @@ int main(int argc, char** argv)
 
 	  // Create fitter
 	  Fitter fitter (polyhedrons, solver);
+
+	  // Load (optional) log directory
+	  if (vm.count ("log-dir"))
+	    {
+	      fitter.logDirectory () = vm["log-dir"].as<std::string> ();
+	    }
 
 	  // Compute initial guess
 	  point_t P0;
