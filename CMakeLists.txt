@@ -11,6 +11,9 @@ SET(PROJECT_DESCRIPTION
   "An automated optimal capsule generator over polyhedrons.")
 SET(PROJECT_URL "https://github.com/roboptim/roboptim-capsule")
 
+# Use MathJax for Doxygen formulae
+SET(DOXYGEN_USE_MATHJAX "YES")
+
 # Where to compile shared objects
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
