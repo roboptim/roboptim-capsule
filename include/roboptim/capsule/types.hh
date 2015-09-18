@@ -40,11 +40,7 @@ namespace roboptim
     typedef roboptim::Function::matrix_t          matrix_t;
 
     /// \brief Import solver type.
-    typedef roboptim::Solver<
-      roboptim::DifferentiableFunction,
-      boost::mpl::vector<
-	roboptim::LinearFunction,
-	roboptim::DifferentiableFunction> > solver_t;
+    typedef roboptim::Solver<roboptim::EigenMatrixDense> solver_t;
 
     /// \brief Define geometry types.
     typedef Eigen::Matrix<value_type,3,1>         point_t;
