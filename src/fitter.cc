@@ -32,7 +32,7 @@
 # include <boost/make_shared.hpp>
 # include <boost/ref.hpp>
 
-# include <roboptim/core/finite-difference-gradient.hh>
+# include <roboptim/core/decorator/finite-difference-gradient.hh>
 # include <roboptim/core/linear-function.hh>
 # include <roboptim/core/optimization-logger.hh>
 

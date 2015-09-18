@@ -21,7 +21,7 @@
 #include <boost/test/output_test_stream.hpp>
 
 #include <roboptim/core/io.hh>
-#include <roboptim/core/finite-difference-gradient.hh>
+#include <roboptim/core/decorator/finite-difference-gradient.hh>
 
 #include "roboptim/capsule/volume.hh"
 
