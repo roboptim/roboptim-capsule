@@ -162,9 +162,9 @@ namespace roboptim
 
       // Define volume function. It is the cost of the optimization
       // problem.
-      Volume volume;
+      boost::shared_ptr<Volume> volume (new Volume ());
       initParam_ = initParam;
-      initVolume_ = volume (initParam)[0];
+      initVolume_ = (*volume) (initParam)[0];
 
       // Define optimization problem with volume as cost function.
       solver_t::problem_t problem (volume);
@@ -275,7 +275,7 @@ namespace roboptim
 	}
 
       solutionParam_ = solutionParam;
-      solutionVolume_ = volume (solutionParam)[0];
+      solutionVolume_ = (*volume) (solutionParam)[0];
     }
 
   } // end of namespace capsule.
