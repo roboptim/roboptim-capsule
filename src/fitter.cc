@@ -204,13 +204,13 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Ipopt parameters
-      solver.parameters ()["ipopt.output_file"].value = "fitter-ipopt.log";
-      solver.parameters ()["ipopt.linear_solver"].value = "mumps";
-      solver.parameters ()["ipopt.derivative_test"].value = "first-order";
+      solver.parameters ()["ipopt.output_file"].value = std::string ("fitter-ipopt.log");
+      solver.parameters ()["ipopt.linear_solver"].value = std::string ("mumps");
+      solver.parameters ()["ipopt.derivative_test"].value = std::string ("first-order");
       solver.parameters ()["ipopt.derivative_test_perturbation"].value = 10e-8;
       solver.parameters ()["ipopt.print_level"].value = 5;
       solver.parameters ()["ipopt.file_print_level"].value = 5;
-      solver.parameters ()["ipopt.print_user_options"].value = "yes";
+      solver.parameters ()["ipopt.print_user_options"].value = std::string ("yes");
       solver.parameters ()["ipopt.bound_relax_factor"].value = 1e-12;
       solver.parameters ()["ipopt.tol"].value = 1e-3;
       solver.parameters ()["ipopt.compl_inf_tol"].value = 1e-6;
@@ -222,8 +222,8 @@ namespace roboptim
       solver.parameters ()["ipopt.acceptable_compl_inf_tol"].value = 1e-3;
       solver.parameters ()["ipopt.acceptable_dual_inf_tol"].value = 1e2;
       solver.parameters ()["ipopt.acceptable_constr_viol_tol"].value = 1e-5;
-      solver.parameters ()["ipopt.mu_strategy"].value = "adaptive";
-      solver.parameters ()["ipopt.nlp_scaling_method"].value = "gradient-based";
+      solver.parameters ()["ipopt.mu_strategy"].value = std::string ("adaptive");
+      solver.parameters ()["ipopt.nlp_scaling_method"].value = std::string ("gradient-based");
 
       // Set optimization logger if a log directory was provided.
       // Note: actual logging to file is done once the OptimizationLogger is
@@ -256,15 +256,8 @@ namespace roboptim
 	    solutionParam = initParam_;
 	    break;
 	  }
+
 	case solver_t::SOLVER_VALUE_WARNINGS:
-	  {
-	    // Display the result.
-	    std::cout << "A solution has been found (with warnings)" << std::endl
-		      << solver.getMinimum<ResultWithWarnings> ()
-		      << std::endl;
-	    solutionParam = solver.getMinimum<ResultWithWarnings> ().x;
-	    break;
-	  }
 	case solver_t::SOLVER_VALUE:
 	  {
 	    // Display the result.
