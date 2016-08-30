@@ -22,6 +22,7 @@
 # include <iostream>
 # include <set>
 # include <limits>
+# include <cstdio>
 
 # include <boost/foreach.hpp>
 
@@ -54,9 +55,13 @@ namespace roboptim
       // Compute the convex hull with qhull
       char flags[25];
       sprintf (flags, "qhull Qc Qt Qi");
+      // Note: using stderr instead of NULL to avoid a bug in older versions of
+      // qhull:
+      // > QH6232 Qhull internal error (userprintf.c): fp is 0.  Wrong
+      // > qh_fprintf called.
       int exitcode = qh_new_qhull (dim, numpoints,
 				   rboxpoints.data (), 0,
-				   flags, NULL, NULL);
+				   flags, NULL, stderr);
 
       if (exitcode != 0)
 	{
@@ -80,8 +85,7 @@ namespace roboptim
 					    vertex->point[2]));
       }
 
-      // TODO: only call this once
-      //qh_freeqhull (!qh_ALL);
+      qh_freeqhull (!qh_ALL);
 # else
       std::cerr << "Qhull not found, cannot compute the convex hull."
 		<< std::endl;
